@@ -1,0 +1,128 @@
+/*
+Author: Rainulf (http://rainulf.net/)
+Licensed under GNU GENERAL PUBLIC LICENSE v2. See: LICENSE file.
+
+CSS for the new template.
+*/
+
+body {
+   font-family: Verdana, Geneva, sans-serif;
+}
+
+/* HEADER */
+#header {
+   position: fixed;
+   top: 0px;
+   left: 0px;
+   width: 100%;
+   background: #FFFFFF url("meow/header.png") repeat-x ;
+   height: 135px;
+   z-index:2;
+}
+
+div#slogan {
+   font: 27px "Trebuchet MS",sans-serif;
+   font-weight: bold;
+   color: #FFFFFF;
+   position: fixed;
+   top: 5%;
+   left: 5%;
+   z-index:2;
+}
+
+div#title {
+   position: fixed;
+   font: 18px "Trebuchet MS",sans-serif;
+   color: #717536;
+   top: 12%;
+   right: 1%;
+   z-index:2;
+}
+
+/* FOOTER */
+div#footer {
+   text-align: center;
+   font: 10px "Trebuchet MS",sans-serif;
+
+}
+
+
+/* NAVIGATION */
+table.navigation {
+   position: absolute;
+   top:150px;
+   right:3%;
+   width: 18%;
+   border:1px solid #619036;
+   z-index:1;
+}
+
+/* LINKS */
+table.links {
+   position: absolute;
+   top:380px;
+   right:3%;
+   width: 18%;
+   border:1px solid #619036;
+   z-index:1;
+}
+
+
+/* ENTRIES */
+table.entries {
+   position: fixed;
+   top:150px;
+   left:3%;
+   width: 18%;
+   border:1px solid #619036;
+   z-index:1;
+}
+
+
+
+/* CONTENTS */
+.margin_start { margin-top: 140px; }
+table.content {
+   margin-left: auto;
+   margin-right: auto;
+   margin-bottom: 21px;
+   width: 50%;
+   border-collapse:collapse;
+   border:1px solid #619036;
+}
+
+table.content thead { text-align: left; }
+
+table.content tbody {
+   text-align: left;
+   font-size: 12px;
+}
+
+table.content tfoot {
+   background-color: #619036;
+   color: #FFFFFF;
+}
+
+/* MISC */
+table thead {
+   background-color: #619036;
+   color: #FFFFFF;
+}
+
+a img {
+   border: none;
+}
+
+
+ul {
+   margin-left:8px; 
+   padding:0px;
+   list-style: none;
+}
+
+li:before { content: "\00BB \0020"; }
+
+a:link {color:#000000; text-decoration: underline;}      
+a:visited {color:#000000; text-decoration: underline;} 
+a:hover {color:#619036; text-decoration: underline;}  
+a:active {color:#000000; text-decoration: underline;}
