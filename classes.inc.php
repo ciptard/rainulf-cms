@@ -41,8 +41,7 @@ class DatabaseConnection {
    
    public function setTable($value) { 
       $this->table = $value; 
-      if(isset($this->table)) return TRUE;
-      else return FALSE;
+      return isset($this->table);
    }
    
    public function setColumn( ) { 
@@ -53,22 +52,19 @@ class DatabaseConnection {
       if(count($column) > 1 || $numargs > 1) $columnImploded = implode(",", $column);
       $this->column = $columnImploded;
       
-      if(isset($this->column)) return TRUE;
-      else return FALSE;
+      return isset($this->column);
    }
    
    public function setOrder($orderby, $order) {
       $this->orderby = $orderby;
       $this->order   = $order;
-      if(isset($this->orderby, $this->order)) return TRUE;
-      else return FALSE;
+      return isset($this->orderby, $this->order);
    }
    
    public function setLimit($limitx, $limity) {
       $this->limitx = $limitx;
       $this->limity = $limity;
-      if(isset($this->limitx, $this->limity)) return TRUE;
-      else return FALSE;
+      return isset($this->limitx, $this->limity);
    }
    
    public function whereSearchLike($where, $what, $strict = FALSE) {
