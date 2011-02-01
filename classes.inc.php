@@ -11,14 +11,14 @@ if(!defined("INDEX")) die("Not allowed.");
  * Contains method for selecting/inserting from/to tables.
  */
 class DatabaseConnection {
-   private $link;     // Database link
+   protected $link;     // Database link
    
-   private $table;
-   private $column;
-   private $order;
-   private $orderby;
-   private $limitx;
-   private $limity;
+   protected $table;
+   protected $column;
+   protected $order;
+   protected $orderby;
+   protected $limitx;
+   protected $limity;
    
    public function __construct( ) {
       require_once 'conf.inc.php';
@@ -28,7 +28,7 @@ class DatabaseConnection {
    }
    
    public function __destruct( ) { 
-      $this->link->close( ); 
+      @$this->link->close( ); 
       unset($this->link, 
             $this->table,
             $this->column,
@@ -65,6 +65,25 @@ class DatabaseConnection {
       $this->limity = $limity;
       return isset($this->limitx, $this->limity);
    }
+
+   public function returnThe($what) {
+      switch($what) {
+         case "table": $ret = $this->table; break;
+         case "column": $ret = $this->column; break;
+         case "order": $ret = $this->order; break;
+         case "orderby": $ret = $this->orderby; break;
+         case "limitx": $ret = $this->limitx; break;
+         case "limity": $ret = $this->limity; break;
+         default: $ret = FALSE;
+      }
+      return $ret;
+   }
+   
+   // the SELECT and INSERT sql queries below will be DEPRECATED, so do not use these.
+   /*
+   public function real_escape_string($str) {
+      return $this->link->real_escape_string($str);
+   }
    
    public function whereSearchLike($where, $what, $strict = FALSE) {
       $searchMethod = ($strict) ? "{$where} = '{$what}'" : "{$where} LIKE '%{$what}%'";
@@ -91,33 +110,20 @@ class DatabaseConnection {
       if(isset($this->limitx, $this->limity)) $queryString .= " LIMIT {$this->limitx}, {$this->limity} ";
       return $this->link->query($queryString);
    }
-   
-   public function returnThe($what) {
-      switch($what) {
-         case "table": $ret = $this->table; break;
-         case "column": $ret = $this->column; break;
-         case "order": $ret = $this->order; break;
-         case "orderby": $ret = $this->orderby; break;
-         case "limitx": $ret = $this->limitx; break;
-         case "limity": $ret = $this->limity; break;
-         default: $ret = FALSE;
-      }
-      return $ret;
-   }
-   
-   public function real_escape_string($str) {
-      return $this->link->real_escape_string($str);
-   }
+   */
+   ////
    
 }
 
 /*
  * Database connection using prepared statements.
  * Contains method for selecting/inserting from/to tables.
+ * inherited from DatabaseConnection - does not use prepared statements, this extension uses one.
  */
-class DBConnection_prepared {
+class DBConnection_prepared extends DatabaseConnection {
    private $pdo_link;
    private $prepare_statements = array( );
+   
    
    public function __construct( ) {
       require_once 'conf.inc.php';
@@ -133,12 +139,23 @@ class DBConnection_prepared {
    public function __destruct( ) {
       $this->pdo_link = NULL;
       unset($this->prepare_statements);
+      parent::__destruct( );
    }
    
-   public function generate_prepare_statements( ) {
-      $this->prepare_statements['allcontents'] = $this->pdo_link->prepare("SELECT * FROM contents");
-      $this->prepare_statements['allcomments'] = $this->pdo_link->prepare("SELECT * FROM comments");
-      $this->prepare_statements['allcategories'] = $this->pdo_link->prepare("SELECT * FROM categories");
+   public function whereSearchLike($where, $what, $strict = FALSE) {
+      // return an sql resource.
+   }
+
+   public function insertInTable( ) {
+      // return an sql resource.
+   }
+   
+   public function indexResult( ) {
+      // return an sql resource.
+   }
+   
+   public function generate_prepare_statements($mode = 0) {
+      // possibility generate queries for selecting all rows
    }
    
    public function execute_statement($s) {
