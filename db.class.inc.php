@@ -20,7 +20,8 @@ class DBConnection {
    }
    
    public function __destruct( ) {
-      @$this->link->close( );
+      $this->pdo_link = NULL;
+      unset($this->prepare_statements);
    }
    
    public function generate_prepare_statements( ) {
