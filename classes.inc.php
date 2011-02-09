@@ -5,26 +5,27 @@
  *******************/
 
 if(!defined("INDEX")) die("Not allowed.");
-
 /*
  * Database connection.
  * Contains method for selecting/inserting from/to tables.
  */
 class DatabaseConnection {
-   protected $link;     // Database link
+   protected $link;                // Database link
    
-   protected $table;
-   protected $column;
-   protected $order;
-   protected $orderby;
-   protected $limitx;
-   protected $limity;
+   protected $table;               // Table name
+   protected $column;              // Columns to be used
+   protected $order;               // Column should be ordered by
+   protected $orderby;             // Desc or Asc?
+   protected $limitx;              // LIMIT start
+   protected $limity;              // LIMIT end
+   
+   protected $prepared = array( ); // Prepared statements
    
    public function __construct( ) {
-      require_once 'conf.inc.php';
-      $this->link = new mysqli($DB_HOST, $DB_USERNAME, $DB_PASSWORD) or die($this->link->error);
-      $this->link->set_charset($DB_CHARSET) or die($this->link->error);
-      $this->link->select_db($DB_DATABASE) or die($this->link->error);
+      $this->link = new mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD) or die($this->link->error);
+      $this->link->set_charset(DB_CHARSET) or die($this->link->error);
+      $this->link->select_db(DB_DATABASE) or die($this->link->error);
+      $this->generatePreparedStatements( );
    }
    
    public function __destruct( ) { 
@@ -35,20 +36,24 @@ class DatabaseConnection {
             $this->order,
             $this->orderby,
             $this->limitx,
-            $this->limity);
+            $this->limity,
+            $this->prepared);
+   }
+   
+   public function generatePreparedStatements( ) {
+   
    }
    
    public function setTable($value) { 
       $this->table = $value; 
-      return isset($this->table));
+      return isset($this->table);
    }
    
    public function setColumn( ) { 
       $column = array( );
       $numargs = func_num_args( );
       $arg_list = func_get_args( );
-      foreach($arg_list as $arg) $column[] = $arg;
-      if(count($column) > 1 || $numargs > 1) $columnImploded = implode(",", $column);
+      if(count($arg_list) > 1 || $numargs > 1) $columnImploded = implode(",", $arg_list);
       $this->column = $columnImploded;
       
       return isset($this->column);
@@ -79,11 +84,10 @@ class DatabaseConnection {
       return $ret;
    }
    
-   // the SELECT and INSERT sql queries below will be DEPRECATED, so do not use these.
-   /*
    public function real_escape_string($str) {
       return $this->link->real_escape_string($str);
    }
+   // the following functions will be deprecated for prepared statements
    
    public function whereSearchLike($where, $what, $strict = FALSE) {
       $searchMethod = ($strict) ? "{$where} = '{$what}'" : "{$where} LIKE '%{$what}%'";
@@ -97,8 +101,7 @@ class DatabaseConnection {
       $values_arr = array( );
       $numargs = func_num_args( );
       $arg_list = func_get_args( );
-      foreach($arg_list as $arg) $values_arr[] = $arg;
-      if(count($values_arr) > 1 || $numargs > 1) $values_arrImploded = implode(",", $values_arr);
+      if(count($arg_list) > 1 || $numargs > 1) $values_arrImploded = implode(",", $arg_list);
       $values_string = $values_arrImploded;
       $queryString = " INSERT INTO {$this->table} ({$this->column}) VALUES ($values_string) ";
       return $this->link->query($queryString);
@@ -110,30 +113,26 @@ class DatabaseConnection {
       if(isset($this->limitx, $this->limity)) $queryString .= " LIMIT {$this->limitx}, {$this->limity} ";
       return $this->link->query($queryString);
    }
-   */
-   ////
    
 }
 
 /*
- * Database connection using prepared statements.
- * Contains method for selecting/inserting from/to tables.
- * inherited from DatabaseConnection - does not use prepared statements, this extension uses one.
+ * Database connection using PDO
  */
-class DBConnection_prepared extends DatabaseConnection {
+class DBConnection_PDO extends DatabaseConnection {
    private $pdo_link;
    private $prepare_statements = array( );
    
    
    public function __construct( ) {
-      require_once 'conf.inc.php';
       try {
-         $this->pdo_link = new PDO("mysql:dbname=$DB_DATABASE;host=$DB_HOST", $DB_USERNAME, $DB_PASSWORD);
+         $this->pdo_link = new PDO("mysql:dbname=".DB_DATABASE.";host=".DB_HOST, DB_USERNAME, DB_PASSWORD);
       } catch (PDOException $e) {
          die('Connection failed: ' . $e->getMessage( ));
       }
-      $this->pdo_link->exec("SET CHARACTER SET $DB_CHARSET");
+      $this->pdo_link->exec("SET CHARACTER SET ".DB_CHARSET);
       $this->generate_prepare_statements( );
+      parent::__construct( );
    }
    
    public function __destruct( ) {
@@ -144,14 +143,17 @@ class DBConnection_prepared extends DatabaseConnection {
    
    public function whereSearchLike($where, $what, $strict = FALSE) {
       // return an sql resource.
+      return parent::whereSearchLike($where, $what, $strict);
    }
 
    public function insertInTable( ) {
       // return an sql resource.
+      return parent::insertInTable( );
    }
    
    public function indexResult( ) {
       // return an sql resource.
+      return parent::indexResult( );
    }
    
    public function generate_prepare_statements($mode = 0) {

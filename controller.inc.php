@@ -5,9 +5,15 @@
  *******************/
 
 if(!defined("INDEX")) die("Not allowed.");
+
 error_reporting(-1);
 session_start( );
-require_once 'classes.inc.php';
+ob_start( );
+date_default_timezone_set("GMT");
+require_once './conf.inc.php';
+require_once './social_connect/facebook/facebook.inc.php';
+require_once './social_connect/twitter/twitteroauth.php';
+require_once './classes.inc.php';
 
 
 

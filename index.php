@@ -13,7 +13,6 @@ require_once 'controller.inc.php';
       <meta name="author" content="Rainulf" />
       <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
       <link rel="stylesheet" type="text/css" href="style.css" />
-      <script src='script.js' type='text/javascript'></script>
    </head>
 <body onload="changeQuote( );">
 <div id="header">
@@ -37,7 +36,7 @@ require_once 'controller.inc.php';
 <div id="page">
 	<div id="content">
    <!--  CONTENTS!! -->
-   <?php // insert contents ?>
+   <?php $display->displayManyPosts($indexposts); ?>
 	</div>
 	<!-- end #content -->
 	<div id="sidebar">
@@ -55,11 +54,11 @@ require_once 'controller.inc.php';
 				</li>
 				<li>
 					<h2>Latest Entries</h2>
-					<?php // insert entries ?>
+					<?php $display->displayList($indexlist); ?>
 				</li>
 				<li>
 					<h2>Latest Source Codes</h2>
-					<?php // insert source codes ?>
+					<?php $display->displayFiles($source_codes); ?>
 				</li>
 				<li>
 					<h2>Links</h2>
@@ -76,5 +75,7 @@ require_once 'controller.inc.php';
 	<p>Copyleft 2011, All Wrongs Reserved. Design by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a>.</p>
 </div>
 <!-- end #footer -->
+<script src='script.js' type='text/javascript'></script>
+<script src='jquery-1.5.min.js' type='text/javascript'></script>
 </body>
 </html>
