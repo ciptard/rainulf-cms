@@ -20,8 +20,6 @@ class DatabaseConnection {
    protected $limitx;              // LIMIT start
    protected $limity;              // LIMIT end
    
-   protected $prepared = array( ); // Prepared statements
-   
    public function __construct( ) {
       $this->link = new mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD) or die($this->link->error);
       $this->link->set_charset(DB_CHARSET) or die($this->link->error);
@@ -38,12 +36,6 @@ class DatabaseConnection {
             $this->limitx,
             $this->limity,
             $this->prepared);
-   }
-   
-   public function generatePreparedStatements( ) {
-      $numOfColumns = count(explode(",", $this->column));
-      $this->prepared['selectall'] = $this->link->prepare($this->generateSelectAllWithLimit( ));
-      $this->prepared['search']    = $this->link->prepare($this->generateSelectSearchWithLimit( ));
    }
    
    public function setTable($value) { 
@@ -96,17 +88,19 @@ class DatabaseConnection {
       $queryString = " SELECT {$this->column} FROM {$this->table} ";
       if(isset($this->orderby, $this->order)) $queryString .= " ORDER BY {$this->orderby} {$this->order} ";
       if(isset($this->limitx, $this->limity)) $queryString .= " LIMIT {$this->limitx}, {$this->limity} ";
-      return $queryString;
+      return $this->link->prepare($queryString);
    }
    
-   public function generateSelectSearchWithLimit( ) {
-      $queryString = " SELECT {$this->column} FROM {$this->table} WHERE ? LIKE ? ";
+   public function generateSelectSearchWithLimit($where, $strict = FALSE) {
+      $searchMethod = ($strict) ? " {$where} = ? " : " {$where} LIKE ? ";
+      $queryString = " SELECT {$this->column} FROM {$this->table} WHERE $searchMethod ";
       if(isset($this->orderby, $this->order)) $queryString .= " ORDER BY {$this->orderby} {$this->order} ";
       if(isset($this->limitx, $this->limity)) $queryString .= " LIMIT {$this->limitx}, {$this->limity} ";
-      return $queryString;
+      return $this->link->prepare($queryString);
    }
    
-   // the following functions will be deprecated for prepared statements
+   // the following functions will be deprecated 
+   // because it will be replace by prepared statements
    public function whereSearchLike($where, $what, $strict = FALSE) {
       $searchMethod = ($strict) ? "{$where} = '{$what}'" : "{$where} LIKE '%{$what}%'";
       $queryString = " SELECT {$this->column} FROM {$this->table} WHERE $searchMethod ";
@@ -134,7 +128,7 @@ class DatabaseConnection {
    
 }
 
-/*
+/**
  * Database connection using PDO
  */
 class DBConnection_PDO extends DatabaseConnection {
@@ -183,9 +177,8 @@ class DBConnection_PDO extends DatabaseConnection {
    }
 }
 
-/*
+/**
  * Reading/writing files from/to directory
- *
  */
 class ManageFiles {
    protected $currentFolder;
@@ -212,13 +205,11 @@ class ManageFiles {
    }
 }
 
-/*
+/**
  * Fetching/inputting contents from/to the database.
- *
  */
 class ManageContents {
    protected $contentDb;
-   protected $arrColumn = array( );
    
    public function __construct($database) {
       $this->contentDb = $database;
@@ -226,15 +217,12 @@ class ManageContents {
       $this->contentDb->setColumn("id", "Title", "content", "PostD");
       $this->contentDb->setOrder("PostD", "desc");
       $this->contentDb->setLimit(0, 7);
-      $this->contentDb->generatePreparedStatements( );
-      $this->arrColumn = explode(",", $this->contentDb->returnThe("column"));
    }
    
    public function __destruct( ) {
       unset($this->contentDb);
    }
    
-   /*
    public function commonArrayFetch ($result) {
       $arr = array( );
       $arrStringColumns = "";
@@ -254,53 +242,69 @@ class ManageContents {
       }
       return $arr;
    }
-   */
+   
+   
+   public function commonStatementFetch($stmt){
+      // Parameter array passed to 'bind_result()'
+      $params = array( ); 
+      $meta = $stmt->result_metadata( );
+      while($field = $meta->fetch_field( )){
+         $params[] = &$row[$field->name];
+      }
+      $res = call_user_func_array(array($stmt, 'bind_result'), $params);
+      if($res){
+         while($stmt->fetch( )){ 
+            foreach($row as $key => $val){
+               $c[$key] = $val; 
+            }
+            $result[] = $c; 
+         }
+      }
+      else {
+         // TODO: return error message.
+      }
+      
+      if(empty($result)) {
+         // TODO: generate error on no return
+      }
+      $stmt->close( );
+      return @$result; // TODO: find alternate, don't supress error.
+   }
    
    public function searchPost($id = 0, $strict = FALSE) {
-      if(!isset($_GET['s']) && !isset($_GET['id'])) return FALSE;
-      
+      // if(!isset($_GET['s'], $_GET['id'])) return FALSE;
+
       if(isset($_GET['s'])) {
          $searchString = $this->contentDb->real_escape_string(htmlspecialchars($_GET['s'], ENT_QUOTES));
+         if(!$strict) {
+            $searchString = "%" . $searchString . "%";
+         }
          $column = "Title";
       }
       else if($id) {
          $searchString = intval($id);
-         $column = "id";
+         $column = "id";      
       }
       
-      $result = $this->contentDb->whereSearchLike($column, $searchString, $strict);
+      $stmt = $this->contentDb->generateSelectSearchWithLimit($column);
+      $stmt->bind_param('s', $searchString);
+      $stmt->execute( );
+      //$result = $this->contentDb->whereSearchLike($column, $searchString, $strict);
+      //$arr = $this->commonArrayFetch($result);
 
-      $arr = $this->commonArrayFetch($result);
-      return $arr;
+      return $this->commonStatementFetch($stmt);
    }
    
-   //TODO: find more elegant way to get columns
    public function indexPosts( ) {
-      //$result = $this->contentDb->indexResult( );
-      // $arr = $this->commonArrayFetch($result);
-      $i = 0;
-      $x = array( );
-      $x = $this->contentDb->returnThe("prepared");
-      $prepared = $x['selectall'];
-      $prepared->execute( );
-      $data = array( ) ; // Array that accepts the data.
-      $params = array( ) ; // Parameter array passed to 'bind_result()'
-      foreach($this->arrColumn as $col_name) {
-        // 'fetch()' will assign fetched value to the variable '$data[$col_name]'
-        $params[] = &$data[$col_name];
-        $i++;
-      }
-      call_user_func_array(array($prepared, "bind_result"), $params);
-      while($prepared->fetch( ));
-      
-      return $data;
+      $stmt = $this->contentDb->generateSelectAllWithLimit( );
+      $stmt->execute( );
+      return $this->commonStatementFetch($stmt);
    }
    
 }
 
-/*
+/**
  * Fetching/inputting comments from/to the database.
- *
  */
 class ManageComments extends ManageContents {
    protected $commentDb;
@@ -311,7 +315,6 @@ class ManageComments extends ManageContents {
       $this->commentDb->setColumn("Name", "content", "PostD", "ContentId", "IP");
       $this->commentDb->setOrder("PostD", "desc");
       $this->commentDb->setLimit(0, 5);
-      $this->commentDb->generatePreparedStatements( );
 
       // Since $contentDb already holds identifier to obj, its table, column, order, etc should already be set
       $this->contentDb = $contentDb;
@@ -356,9 +359,8 @@ class ManageComments extends ManageContents {
    
 }
 
-/*
+/**
  * Only for displaying/echoing HTML/contents
- *
  */
 class Displayer {
    protected $contents;
@@ -410,7 +412,7 @@ class Displayer {
    public function displayManyPosts($arr) {
       $numOfPosts = count($arr);
       for($i=0; $i < $numOfPosts; $i++) {
-         $this->displayPost($arr['id'], $arr[$i]['Title'], $arr[$i]['PostD'], $arr[$i]['content'], 0);
+         $this->displayPost($arr[$i]['id'], $arr[$i]['Title'], $arr[$i]['PostD'], $arr[$i]['content'], 0);
       }
    }
    
