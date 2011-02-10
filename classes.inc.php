@@ -1,8 +1,9 @@
 <?php
-/*******************
- * Author: Rainulf *
- * Date  : Oct 19  *
- *******************/
+/******************************
+ * Author      : Rainulf      *
+ * Date Started: Oct 19, 2010 *
+ * Last Updated: Feb 09, 2011 *
+ ******************************/
 
 if(!defined("INDEX")) die("Not allowed.");
 /*
@@ -25,7 +26,6 @@ class DatabaseConnection {
       $this->link = new mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD) or die($this->link->error);
       $this->link->set_charset(DB_CHARSET) or die($this->link->error);
       $this->link->select_db(DB_DATABASE) or die($this->link->error);
-      $this->generatePreparedStatements( );
    }
    
    public function __destruct( ) { 
@@ -41,7 +41,9 @@ class DatabaseConnection {
    }
    
    public function generatePreparedStatements( ) {
-   
+      $numOfColumns = count(explode(",", $this->column));
+      $this->prepared['selectall'] = $this->link->prepare($this->generateSelectAllWithLimit( ));
+      $this->prepared['search']    = $this->link->prepare($this->generateSelectSearchWithLimit( ));
    }
    
    public function setTable($value) { 
@@ -79,6 +81,7 @@ class DatabaseConnection {
          case "orderby": $ret = $this->orderby; break;
          case "limitx": $ret = $this->limitx; break;
          case "limity": $ret = $this->limity; break;
+         case "prepared": $ret = $this->prepared; break;
          default: $ret = FALSE;
       }
       return $ret;
@@ -87,8 +90,23 @@ class DatabaseConnection {
    public function real_escape_string($str) {
       return $this->link->real_escape_string($str);
    }
-   // the following functions will be deprecated for prepared statements
    
+   // the following functions are used for generating prepared statements
+   public function generateSelectAllWithLimit( ) {
+      $queryString = " SELECT {$this->column} FROM {$this->table} ";
+      if(isset($this->orderby, $this->order)) $queryString .= " ORDER BY {$this->orderby} {$this->order} ";
+      if(isset($this->limitx, $this->limity)) $queryString .= " LIMIT {$this->limitx}, {$this->limity} ";
+      return $queryString;
+   }
+   
+   public function generateSelectSearchWithLimit( ) {
+      $queryString = " SELECT {$this->column} FROM {$this->table} WHERE ? LIKE ? ";
+      if(isset($this->orderby, $this->order)) $queryString .= " ORDER BY {$this->orderby} {$this->order} ";
+      if(isset($this->limitx, $this->limity)) $queryString .= " LIMIT {$this->limitx}, {$this->limity} ";
+      return $queryString;
+   }
+   
+   // the following functions will be deprecated for prepared statements
    public function whereSearchLike($where, $what, $strict = FALSE) {
       $searchMethod = ($strict) ? "{$where} = '{$what}'" : "{$where} LIKE '%{$what}%'";
       $queryString = " SELECT {$this->column} FROM {$this->table} WHERE $searchMethod ";
@@ -200,6 +218,7 @@ class ManageFiles {
  */
 class ManageContents {
    protected $contentDb;
+   protected $arrColumn = array( );
    
    public function __construct($database) {
       $this->contentDb = $database;
@@ -207,18 +226,25 @@ class ManageContents {
       $this->contentDb->setColumn("id", "Title", "content", "PostD");
       $this->contentDb->setOrder("PostD", "desc");
       $this->contentDb->setLimit(0, 7);
+      $this->contentDb->generatePreparedStatements( );
+      $this->arrColumn = explode(",", $this->contentDb->returnThe("column"));
    }
    
    public function __destruct( ) {
       unset($this->contentDb);
    }
    
+   /*
    public function commonArrayFetch ($result) {
       $arr = array( );
       $arrStringColumns = "";
       switch(get_class($this)) {
-         case "ManageContents": $columnsExploded = explode(',', $this->contentDb->returnThe("column")); break;
-         case "ManageComments": $columnsExploded = explode(',', $this->commentDb->returnThe("column")); break;
+         case "ManageContents": 
+            $columnsExploded = explode(',', $this->contentDb->returnThe("column")); 
+            break;
+         case "ManageComments": 
+            $columnsExploded = explode(',', $this->commentDb->returnThe("column")); 
+            break;
       }
       foreach($columnsExploded as $column) $arrStringColumns .= "'{$column}' => \$row['{$column}'], ";
       $arrStringColumns = rtrim($arrStringColumns, ", ");
@@ -228,6 +254,7 @@ class ManageContents {
       }
       return $arr;
    }
+   */
    
    public function searchPost($id = 0, $strict = FALSE) {
       if(!isset($_GET['s']) && !isset($_GET['id'])) return FALSE;
@@ -247,10 +274,26 @@ class ManageContents {
       return $arr;
    }
    
+   //TODO: find more elegant way to get columns
    public function indexPosts( ) {
-      $result = $this->contentDb->indexResult( );
-      $arr = $this->commonArrayFetch($result);
-      return $arr;
+      //$result = $this->contentDb->indexResult( );
+      // $arr = $this->commonArrayFetch($result);
+      $i = 0;
+      $x = array( );
+      $x = $this->contentDb->returnThe("prepared");
+      $prepared = $x['selectall'];
+      $prepared->execute( );
+      $data = array( ) ; // Array that accepts the data.
+      $params = array( ) ; // Parameter array passed to 'bind_result()'
+      foreach($this->arrColumn as $col_name) {
+        // 'fetch()' will assign fetched value to the variable '$data[$col_name]'
+        $params[] = &$data[$col_name];
+        $i++;
+      }
+      call_user_func_array(array($prepared, "bind_result"), $params);
+      while($prepared->fetch( ));
+      
+      return $data;
    }
    
 }
@@ -268,6 +311,7 @@ class ManageComments extends ManageContents {
       $this->commentDb->setColumn("Name", "content", "PostD", "ContentId", "IP");
       $this->commentDb->setOrder("PostD", "desc");
       $this->commentDb->setLimit(0, 5);
+      $this->commentDb->generatePreparedStatements( );
 
       // Since $contentDb already holds identifier to obj, its table, column, order, etc should already be set
       $this->contentDb = $contentDb;
@@ -331,11 +375,11 @@ class Displayer {
    
    public function displayPost($id, $title, $date, $content, $numofcomments) {
       echo "
-         <a name='$id'></a>
+         <a name='{$id}'></a>
 		   <div class='post'>
 			   <h1 class='title'><a href=\"javascript:unhide('id_{$id}');\">$title</a></h1>
 			   <div id='id_{$id}' class='{$this->unhideFirstPost}'>
-			      <p class='byline'><small>Posted on $date</small></p>
+			      <p class='byline'><small>Posted on {$date}</small></p>
 			      <div class='entry'>
                $content
 			      </div>
@@ -366,7 +410,7 @@ class Displayer {
    public function displayManyPosts($arr) {
       $numOfPosts = count($arr);
       for($i=0; $i < $numOfPosts; $i++) {
-         $this->displayPost($arr[$i]['id'], $arr[$i]['Title'], $arr[$i]['PostD'], $arr[$i]['content'], 0);
+         $this->displayPost($arr['id'], $arr[$i]['Title'], $arr[$i]['PostD'], $arr[$i]['content'], 0);
       }
    }
    
