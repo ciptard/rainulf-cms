@@ -63,5 +63,5 @@ $source_codes = $files->scanFolder(1);
 // Call comment methods if equal to comments.
 if(isset($_GET['comment_contentid'])) $comment_contents = $comments->getCommentsForContentId( );
 // Call commen methods for inserting comments.
-if(isset($_POST['post_id'], $_POST['comment_name'], $_POST['comment_content'])) $comments->insertCommentsInId( );
+if(isset($_POST['post_id'], $_POST['comment_content'])) $comments->insertCommentsInId( );
 ?>

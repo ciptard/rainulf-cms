@@ -333,12 +333,12 @@ class ManageComments extends ManageContents {
       // if(!isset($_POST['post_id'], $_POST['comment_name'], $_POST['comment_content'])) return FALSE;
       // if($_POST['post_id'] == NULL || $_POST['post_id'] == "" || $_POST['comment_name'] == NULL || $_POST['comment_name'] == "") return FALSE;
       $post_id          = intval($_POST['post_id']);
-      $comment_name     = $this->fb_portal->user['me']['name'];
+      $fb_user          = $this->fb_portal->returnUser( ); // get user's fb full name
+      $comment_name     = "'".$fb_user['me']['name']."'";
       $comment_content  = "'".$this->commentDb->real_escape_string(htmlspecialchars($_POST['comment_content'], ENT_QUOTES))."'";
       $comment_ip       = "'".$_SERVER['REMOTE_ADDR']."'";
       // if($this->checkSpamBlacklist($comment_name) || $this->checkSpamBlacklist($comment_content)) return FALSE;
       $result = $this->commentDb->insertInTable($comment_name, $comment_content, "NOW( )", $post_id, $comment_ip);
-      $ret = ($result) ? TRUE : FALSE;
       return $result;
    }
    
@@ -497,6 +497,10 @@ class FacebookPortal {
           //TODO: generate error.
         }
       }
+   }
+   
+   public function returnUser( ) {
+      return $this->user;
    }
    
    public function status( ){
