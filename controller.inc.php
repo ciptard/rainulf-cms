@@ -15,24 +15,23 @@ require_once './social_connect/facebook/facebook.inc.php';
 require_once './social_connect/twitter/twitteroauth.php';
 require_once './classes.inc.php';
 
-
-
-/*
+/**
  * Object creation
- *
  */
  
 // $user, $pass, $db, $host = "localhost", $charset = "utf8"
 // NOTE: objects that are passed hold a copy of the identifier, which points to the same object. Therefore, we need to instantiate another one for comments.
 // REF:  http://php.net/manual/en/language.oop5.references.php
-// TODO: Try to find more sufficient method.
-$contentDb  = new DatabaseConnection( );
-$commentDb  = new DatabaseConnection( );
+$contentDb = new DatabaseConnection( );
+$commentDb = new DatabaseConnection( );
+$fb_portal = new FacebookPortal( );
 
-$contents    = new ManageContents($contentDb);
-$comments    = new ManageComments($commentDb, $contentDb); // inherit - extends 'ManageContents'
-$display     = new Displayer($contents);
-$files       = new ManageFiles("./source_codes/");
+$contents  = new ManageContents($contentDb);
+$comments  = new ManageComments($commentDb, $contentDb, $fb_portal); // inherit - extends 'ManageContents'
+$display   = new Displayer($contents, $fb_portal);
+$files     = new ManageFiles("./source_codes/");
+
+
 
 // Fixed annoying magic quotes.
 if (get_magic_quotes_gpc( )) {
@@ -49,9 +48,8 @@ if (get_magic_quotes_gpc( )) {
 }
 
 
-/*
+/**
  * init variables and function calls
- *
  */
 $id = (isset($_GET['id'])) ? intval($_GET['id']) : 0;
 // Call the default searchPost( ) if $_GET['s'] is set.

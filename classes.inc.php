@@ -308,14 +308,15 @@ class ManageContents {
  */
 class ManageComments extends ManageContents {
    protected $commentDb;
+   protected $fb_portal;
    
-   public function __construct($commentDb, $contentDb) {
+   public function __construct($commentDb, $contentDb, $fb_portal) {
       $this->commentDb = $commentDb;
+      $this->fb_portal = $fb_portal;
       $this->commentDb->setTable("comments");
       $this->commentDb->setColumn("Name", "content", "PostD", "ContentId", "IP");
       $this->commentDb->setOrder("PostD", "desc");
       $this->commentDb->setLimit(0, 5);
-
       // Since $contentDb already holds identifier to obj, its table, column, order, etc should already be set
       $this->contentDb = $contentDb;
    }
@@ -329,16 +330,16 @@ class ManageComments extends ManageContents {
    }
    
    public function insertCommentsInId( ) {
-      if(!isset($_POST['post_id'], $_POST['comment_name'], $_POST['comment_content'])) return FALSE;
-      if($_POST['post_id'] == NULL || $_POST['post_id'] == "" || $_POST['comment_name'] == NULL || $_POST['comment_name'] == "") return FALSE;
+      // if(!isset($_POST['post_id'], $_POST['comment_name'], $_POST['comment_content'])) return FALSE;
+      // if($_POST['post_id'] == NULL || $_POST['post_id'] == "" || $_POST['comment_name'] == NULL || $_POST['comment_name'] == "") return FALSE;
       $post_id          = intval($_POST['post_id']);
-      $comment_name     = "'".$this->commentDb->real_escape_string(htmlspecialchars($_POST['comment_name'], ENT_QUOTES))."'";
+      $comment_name     = $this->fb_portal->user['me']['name'];
       $comment_content  = "'".$this->commentDb->real_escape_string(htmlspecialchars($_POST['comment_content'], ENT_QUOTES))."'";
       $comment_ip       = "'".$_SERVER['REMOTE_ADDR']."'";
-      if($this->checkSpamBlacklist($comment_name) || $this->checkSpamBlacklist($comment_content)) return FALSE;
+      // if($this->checkSpamBlacklist($comment_name) || $this->checkSpamBlacklist($comment_content)) return FALSE;
       $result = $this->commentDb->insertInTable($comment_name, $comment_content, "NOW( )", $post_id, $comment_ip);
       $ret = ($result) ? TRUE : FALSE;
-      return $ret;
+      return $result;
    }
    
    public function checkSpamBlacklist($str) {
@@ -364,10 +365,12 @@ class ManageComments extends ManageContents {
  */
 class Displayer {
    protected $contents;
+   protected $fb_portal;
    public $unhideFirstPost;
    
-   public function __construct($contents) {
+   public function __construct($contents, $fb_portal) {
       $this->contents = $contents;
+      $this->fb_portal = $fb_portal;
       $this->unhideFirstPost = "unhidden";
    }
    
@@ -392,13 +395,18 @@ class Displayer {
 			         <form action=\"\" method='post'>
 			         <input name='post_id' type='hidden' value='{$id}' />
 			         <table>
-			            <tr>
-			               <th>Who are you?</th><td><input type='text' name='comment_name' /> Don't spam.</td>
-			            </tr>
-			            <tr>
+			            <tr>";
+                     if($this->fb_portal->status( )){
+                        echo "
 			               <th valign='top'>Your comment?</th>
 			               <td><textarea name='comment_content' rows='7' cols='50'></textarea><br />
-			               <input type='submit' value='Submit!' /><b>NOTE:</b> Comments that contain <a href='spamblacklist.txt'>blacklisted words</a> will not get in.</td>
+			               <input type='submit' value='Submit!' /></td>";
+                     }
+                     else{
+                        echo "
+                        <th valign='top'>Anon may not comment.</th>";
+                     }
+                     echo "
 			            </tr>
 			         </table>
 			         </form>
@@ -447,7 +455,72 @@ class Displayer {
    }
 }
 
-
+/**
+ * Responsible for connecting to Facebook
+ */
+class FacebookPortal {
+   protected $user = array( );
+   protected $uid;
+   protected $connection;
+   protected $session;
+   
+   public function __construct( ){
+      $this->connection = new Facebook(array(
+               'appId'  => FACEBOOK_APPID,
+               'secret' => FACEBOOK_SECRET,
+               'cookie' => true,
+      ));
+      $this->session = $this->connection->getSession( );
+      $this->user = null;
+      if($this->session) {
+        try {
+          $this->uid = $this->connection->getUser( );
+          $this->user['me']        = $this->connection->api('/me');
+          /* TODO: try to find a way to optimize load time when using these
+          $this->user['friends']   = $this->connection->api('/me/friends');
+          $this->user['newsf']     = $this->connection->api('/me/home/');
+          $this->user['wall']      = $this->connection->api('/me/feed');
+          $this->user['likes']     = $this->connection->api('/me/likes');
+          $this->user['movies']    = $this->connection->api('/me/movies');
+          $this->user['music']     = $this->connection->api('/me/music');
+          $this->user['books']     = $this->connection->api('/me/books');
+          $this->user['notes']     = $this->connection->api('/me/notes');
+          $this->user['photos']    = $this->connection->api('/me/photos');
+          $this->user['albums']    = $this->connection->api('/me/albums');
+          $this->user['videos']    = $this->connection->api('/me/videos');
+          $this->user['vuploads']  = $this->connection->api('/me/videos/uploaded');
+          $this->user['events']    = $this->connection->api('/me/events');
+          $this->user['groups']    = $this->connection->api('/me/groups');
+          */
+        } catch (FacebookApiException $e) {
+          error_log($e);
+          //TODO: generate error.
+        }
+      }
+   }
+   
+   public function status( ){
+      return !!$this->user['me'];
+   }
+   
+   public function url( ){
+      return ($this->status( )) ? 
+      $this->connection->getLogoutUrl( ) : $this->connection->getLoginUrl( );
+   }
+   
+   public function out( ){
+      echo "<ul>";
+      if($this->status( )) {
+         echo "<li>Welcome home, {$this->user['me']['last_name']}-sama!</li>";
+         echo "<li><a href='{$this->url( )}'><img src=\"http://static.ak.fbcdn.net/rsrc.php/z2Y31/hash/cxrz4k7j.gif\"></a></li>";
+      }
+      else {
+         echo "<li>Hello anon, would you like to login?</li>";
+         echo "<li><a href='{$this->url( )}'><img src=\"http://static.ak.fbcdn.net/rsrc.php/zB6N8/hash/4li2k73z.gif\"></a></li>";
+      }
+      echo "</ul>";
+   }
+}
 
 
 

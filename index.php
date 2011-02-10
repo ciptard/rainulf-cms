@@ -53,6 +53,10 @@ require_once 'controller.inc.php';
 					</form>
 				</li>
 				<li>
+					<h2>Social Connect</h2>
+					<?php $fb_portal->out( ); ?>
+				</li>
+				<li>
 					<h2>Latest Entries</h2>
 					<?php $display->displayList($indexlist); ?>
 				</li>
@@ -62,7 +66,21 @@ require_once 'controller.inc.php';
 				</li>
 				<li>
 					<h2>Links</h2>
-					<?php // insert links ?>
+					<ul>
+                  <li><a href="http://twitter.com/rainulf" target="_blank">Rainulf@Twitter</a></li>
+                  <li><a href="http://bit.ly/rainulfirc" target="_blank">Rainulf@IRC Freenode</a></li>
+                  <li><a href="http://code.google.com/p/phpmyinput/" target="_blank">phpMyInput</a></li>
+                  <li><a href="http://rainulf.net/younha/" target="_blank">Younha Fan Page</a></li>
+                  <li><a href="http://helloyounha.com/xe/" target="_blank">Hello!Younha!</a></li>
+                  <li><a href="http://www.animenewsnetwork.com/" target="_blank">Anime News Network</a></li>
+                  <li><a href="http://myanimelist.net/" target="_blank">MyAnimeList</a></li>
+                  <li><a href="http://randomc.net/" target="_blank">Random Curiosity</a></li>
+                  <li><a href="https://my.senecacollege.ca/" target="_blank">Seneca BlackBoard</a></li>
+                  <li><a href="https://scs.senecac.on.ca/" target="_blank">Seneca CS</a></li>
+                  <li><a href="https://learn.senecac.on.ca/" target="_blank">Seneca Webmail</a></li>
+                  <li><a href="http://validator.w3.org/check?uri=referer" target="_blank">xHTML VALID</a></li>
+                  <li><a href="http://jigsaw.w3.org/css-validator/check/referer" target="_blank">CSS VALID</a></li>
+					</ul>
 				</li>
 			</ul>
 		</div>
