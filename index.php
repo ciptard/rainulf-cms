@@ -7,10 +7,10 @@ require_once 'controller.inc.php';
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
    <head>
-      <title>Rainulf</title>
-      <meta name="description" content="Jose Rainulf Pineda's official website. Software and Web development - C/C++, PHP, mySQL, xHTML and JavaScript languages." />
-      <meta name="keywords" content="jose rainulf pineda, rainulf's website, open source, software development, web development, c++ and c, php, mysql, xhtml, javascript, programming languages, programming tutorials, anime, manga" />
-      <meta name="author" content="Rainulf" />
+      <title><?php $display->displayIndividualPostInfo($indexposts, 'Title'); echo SITE_TITLE; ?></title>
+      <meta name="description" content="<?php echo SITE_DESC; ?>" />
+      <meta name="keywords" content="<?php echo SITE_KEYW; ?>" />
+      <meta name="author" content="<?php echo SITE_AUTHOR; ?>" />
       <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
       <link rel="stylesheet" type="text/css" href="style.css" />
    </head>
@@ -26,7 +26,7 @@ require_once 'controller.inc.php';
 			<li class="first"><a href="./">Home</a></li>
 			<li><a href="http://zenit.senecac.on.ca/wiki/index.php/User:Rainulf">About Me</a></li>
 			<li><a href="./source_codes/">Source Codes</a></li>
-			<li><a href="#">RSS Feed</a></li>
+			<li><a href="./rss.php">RSS Feed</a></li>
 			<li><a href="#" onclick="alert('rainulf1@gmail.com');">Contact Me</a></li>
 		</ul>
 	</div>

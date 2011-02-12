@@ -2,7 +2,7 @@
 /******************************
  * Author      : Rainulf      *
  * Date Started: Oct 19, 2010 *
- * Last Updated: Feb 09, 2011 *
+ * Last Updated: Feb 11, 2011 *
  ******************************/
 
 if(!defined("INDEX")) die("Not allowed.");
@@ -338,7 +338,10 @@ class ManageComments extends ManageContents {
       $comment_content  = "'".$this->commentDb->real_escape_string(htmlspecialchars($_POST['comment_content'], ENT_QUOTES))."'";
       $comment_ip       = "'".$_SERVER['REMOTE_ADDR']."'";
       // if($this->checkSpamBlacklist($comment_name) || $this->checkSpamBlacklist($comment_content)) return FALSE;
-      $result = $this->commentDb->insertInTable($comment_name, $comment_content, "NOW( )", $post_id, $comment_ip);
+      $result = 0;
+      if($this->fb_portal->status( )) {
+         $result = $this->commentDb->insertInTable($comment_name, $comment_content, "NOW( )", $post_id, $comment_ip);
+      }
       return $result;
    }
    
@@ -424,6 +427,27 @@ class Displayer {
       }
    }
    
+   public function displayIndividualPostInfo($arr, $key) {
+      if(isset($arr, $_GET['id'])) {
+         echo $arr[0][$key]." - ";
+      }
+   }
+   
+   public function displayRSSItem($arr) {
+      $numOfPosts = count($arr);
+      for($i=0; $i < $numOfPosts; $i++) {
+         $datetime = explode(" ", $arr[$i]['PostD']);
+         $date = explode("-", $datetime[0]);
+         $time = explode(":", $datetime[1]);
+         echo "   <item>\n";
+         echo "     <title>" . $arr[$i]['Title'] . "</title>\n";
+         echo "     <link>".SITE_URL."?id=" . $arr[$i]['id'] . "</link>\n";
+         echo "     <description><![CDATA[ " . $arr[$i]['content'] . " ]]></description>\n";
+         echo "     <pubDate>" . date("r", mktime($time[0], $time[1], $time[2], $date[1], $date[2], $date[0])) . "</pubDate>\n";
+         echo "   </item>\n";
+      }
+   }
+   
    public function displayList($arr) {
       $numOfPosts = count($arr);
       echo "<ul>";
@@ -473,33 +497,40 @@ class FacebookPortal {
       $this->session = $this->connection->getSession( );
       $this->user = null;
       if($this->session) {
-        try {
-          $this->uid = $this->connection->getUser( );
-          $this->user['me']        = $this->connection->api('/me');
-          /* TODO: try to find a way to optimize load time when using these
-          $this->user['friends']   = $this->connection->api('/me/friends');
-          $this->user['newsf']     = $this->connection->api('/me/home/');
-          $this->user['wall']      = $this->connection->api('/me/feed');
-          $this->user['likes']     = $this->connection->api('/me/likes');
-          $this->user['movies']    = $this->connection->api('/me/movies');
-          $this->user['music']     = $this->connection->api('/me/music');
-          $this->user['books']     = $this->connection->api('/me/books');
-          $this->user['notes']     = $this->connection->api('/me/notes');
-          $this->user['photos']    = $this->connection->api('/me/photos');
-          $this->user['albums']    = $this->connection->api('/me/albums');
-          $this->user['videos']    = $this->connection->api('/me/videos');
-          $this->user['vuploads']  = $this->connection->api('/me/videos/uploaded');
-          $this->user['events']    = $this->connection->api('/me/events');
-          $this->user['groups']    = $this->connection->api('/me/groups');
+         try {
+            $this->uid = $this->connection->getUser( );
+            $this->user['me']        = $this->connection->api('/me');
+            /* TODO: try to find a way to optimize load time when using these
+            $this->user['friends']   = $this->connection->api('/me/friends');
+            $this->user['newsf']     = $this->connection->api('/me/home/');
+            $this->user['wall']      = $this->connection->api('/me/feed');
+            $this->user['likes']     = $this->connection->api('/me/likes');
+            $this->user['movies']    = $this->connection->api('/me/movies');
+            $this->user['music']     = $this->connection->api('/me/music');
+            $this->user['books']     = $this->connection->api('/me/books');
+            $this->user['notes']     = $this->connection->api('/me/notes');
+            $this->user['photos']    = $this->connection->api('/me/photos');
+            $this->user['albums']    = $this->connection->api('/me/albums');
+            $this->user['videos']    = $this->connection->api('/me/videos');
+            $this->user['vuploads']  = $this->connection->api('/me/videos/uploaded');
+            $this->user['events']    = $this->connection->api('/me/events');
+            $this->user['groups']    = $this->connection->api('/me/groups');
           */
-        } catch (FacebookApiException $e) {
+         } catch (FacebookApiException $e) {
           error_log($e);
           //TODO: generate error.
-        }
+         }
       }
    }
    
-   public function returnUser( ) {
+   public function __destruct( ){
+      unset($this->user,
+            $this->uid,
+            $this->session,
+            $this->connection);
+   }
+   
+   public function returnUser( ){
       return $this->user;
    }
    
@@ -526,6 +557,64 @@ class FacebookPortal {
    }
 }
 
+/**
+ * Responsible for connecting to Seneca
+ */
+class SenecaPortal {
+   protected $ch;
+   protected $seneca_auth_status = false;
+   
+   public function __construct( ){
+      $this->ch = curl_init( );
+      curl_setopt($this->ch, CURLOPT_URL, SENECA_AUTH_URL);
+      curl_setopt($this->ch, CURLOPT_POST, true);
+      curl_setopt($this->ch, CURLOPT_COOKIEJAR, SENECA_COOKIEJAR);
+      curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
+   }
+   
+   public function __destruct( ){
+      curl_close($this->ch);
+      unset($this->ch,
+            $this->seneca_auth_status);
+   }
+   
+   public function status( ){
+      return $this->seneca_auth_status;
+   }
+   
+   public function check($username, $password) {
+      curl_setopt($this->ch, CURLOPT_POSTFIELDS, 
+         "username={$username}&password={$password}&fromlogin=true&orgaccess=https&Button2=Log In");
+      $store = curl_exec ($this->ch); 
+      return !preg_match('/(failed)/i', $store);
+   }
+
+}
+
+class SocialConnect {
+   protected $portals = array( );
+   
+   public function __construct( ){
+      $this->portals = func_get_args( );
+   }
+   
+   public function status( ){
+      $ret = false;
+      foreach($portals as $portal) {
+         if($portal->status( )) {
+            $ret = true;
+         }
+      }
+      return $ret;
+   }
+   
+   public function out( ){
+      if($this->status( )){
+         
+      }
+   }
+   
+}
 
 
 ?>
