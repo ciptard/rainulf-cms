@@ -2,7 +2,7 @@
 /******************************
  * Author      : Rainulf      *
  * Date Started: Oct 19, 2010 *
- * Last Updated: Feb 11, 2011 *
+ * Last Updated: Feb 14, 2011 *
  ******************************/
 
 if(!defined("INDEX")) die("Not allowed.");
@@ -97,6 +97,10 @@ class DatabaseConnection {
       if(isset($this->orderby, $this->order)) $queryString .= " ORDER BY {$this->orderby} {$this->order} ";
       if(isset($this->limitx, $this->limity)) $queryString .= " LIMIT {$this->limitx}, {$this->limity} ";
       return $this->link->prepare($queryString);
+   }
+   
+   public function doQry($query) {
+      return $this->link->query($query);
    }
    
    // the following functions will be deprecated 
@@ -210,13 +214,16 @@ class ManageFiles {
  */
 class ManageContents {
    protected $contentDb;
+   public $totalContents;
    
    public function __construct($database) {
       $this->contentDb = $database;
       $this->contentDb->setTable("contents");
       $this->contentDb->setColumn("id", "Title", "content", "PostD");
       $this->contentDb->setOrder("PostD", "desc");
-      $this->contentDb->setLimit(0, 7);
+      $this->contentDb->setLimit(0, CONTENTS_PER_PG);
+      $result = $this->contentDb->doQry('SELECT * FROM contents');
+      $this->totalContents = $result->num_rows;
    }
    
    public function __destruct( ) {
@@ -301,6 +308,17 @@ class ManageContents {
       return $this->commonStatementFetch($stmt);
    }
    
+   public function paging($page) {
+      //$pg = $_GET['page'];
+      $tempOffset = $page * CONTENTS_PER_PG;
+      $offset = ($tempOffset > CONTENTS_PER_PG) ? ceil($tempOffset - CONTENTS_PER_PG) : 0;
+      $res = $this->contentDb->setLimit($offset, CONTENTS_PER_PG);
+      if(!$res){
+         // TODO: print error
+      }
+      return $res;
+   }
+   
 }
 
 /**
@@ -316,7 +334,7 @@ class ManageComments extends ManageContents {
       $this->commentDb->setTable("comments");
       $this->commentDb->setColumn("Name", "content", "PostD", "ContentId", "IP");
       $this->commentDb->setOrder("PostD", "desc");
-      $this->commentDb->setLimit(0, 5);
+      $this->commentDb->setLimit(0, COMMENTS_PER_CONTENT);
       // Since $contentDb already holds identifier to obj, its table, column, order, etc should already be set
       $this->contentDb = $contentDb;
    }
@@ -476,6 +494,18 @@ class Displayer {
       else {
          echo "<p>'".htmlspecialchars($_GET['s'], ENT_QUOTES)."' cannot be found.</p>";
       }
+   }
+   public function displayPaging($page) {
+      $next = "";
+      $maxPages = $this->contents->totalContents / CONTENTS_PER_PG;
+      echo "<p>";
+      if($page > 1) {
+         echo "[<a href=\"./?page=" . ($page - 1) . "\">Prev</a>]";
+      }
+      if($page < $maxPages) {
+         echo "[<a href=\"./?page=" . $next = $next + ($page + 1) . "\">Next</a>]";
+      }
+      echo "</p>";
    }
 }
 

@@ -227,6 +227,12 @@ a img {
 	width: 255px;
 }
 
+/* Paging */
+#paging {
+	clear: both;
+	text-align: center;
+}
+
 /* Footer */
 
 #footer {

@@ -61,6 +61,20 @@ if (get_magic_quotes_gpc( )) {
  * init variables and function calls
  */
 $id = (isset($_GET['id'])) ? intval($_GET['id']) : 0;
+// List the Latest Entries
+$indexlist  = $contents->indexPosts( );
+// List the Latest Source Codes
+$source_codes = $files->scanFolder(1);
+// Call method for paging
+// NOTE: List must be called first so it won't get affected by paging
+//       because list and content share the same resources.
+if(isset($_GET['page']) && !isset($_GET['id'])) {
+   $page = intval($_GET['page']);
+   $contents->paging($page);
+}
+else {
+   $page = 1;
+}
 // Call the default searchPost( ) if $_GET['s'] is set.
 if(isset($_GET['s'])) {
    $indexposts = $contents->searchPost( );
@@ -81,8 +95,4 @@ if(isset($_GET['comment_contentid'])) {
 if(isset($_POST['post_id'], $_POST['comment_content'])) {
    $comments->insertCommentsInId( );
 }
-// List the Latest Entries
-$indexlist  = $contents->indexPosts( );
-// List the Latest Source Codes
-$source_codes = $files->scanFolder(1);
 ?>

@@ -89,6 +89,10 @@ require_once 'controller.inc.php';
 	<!-- end #sidebar -->
 </div>
 <!-- end #page -->
+<div id="paging">
+   <?php $display->displayPaging($page); ?>
+</div>
+<!-- end #paging --> 
 <div id="footer">
 	<p>Copyleft 2011, All Wrongs Reserved. Design by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a>.</p>
 </div>
