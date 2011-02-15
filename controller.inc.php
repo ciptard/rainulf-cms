@@ -35,8 +35,8 @@ $social    = new SocialConnect($fb_portal, $sc_portal);
 
 // Content objs
 $contents  = new ManageContents($contentDb);
-$comments  = new ManageComments($commentDb, $contentDb, $fb_portal); // inherit - extends 'ManageContents'
-$display   = new Displayer($contents, $fb_portal);
+$comments  = new ManageComments($commentDb, $contentDb); // inherit - extends 'ManageContents'
+$display   = new Displayer($contents, $comments);
 $files     = new ManageFiles("./source_codes/");
 
 
@@ -60,6 +60,20 @@ if (get_magic_quotes_gpc( )) {
 /**
  * init variables and function calls
  */
+// Social Connect authentication
+if($social->status( )) {
+   $_SESSION['loggedin'] = 1;
+}
+if(isset($_SESSION['loggedin'], $_GET['logout'])) {
+   unset($_SESSION['loggedin']);
+   header("Location: . ");
+}
+if(isset($_POST['username'], $_POST['password'])) {
+   if($social->check( )) {
+      $_SESSION['loggedin'] = 1;
+   }
+}
+// getting ID
 $id = (isset($_GET['id'])) ? intval($_GET['id']) : 0;
 // List the Latest Entries
 $indexlist  = $contents->indexPosts( );

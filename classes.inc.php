@@ -326,11 +326,9 @@ class ManageContents {
  */
 class ManageComments extends ManageContents {
    protected $commentDb;
-   protected $fb_portal;
    
-   public function __construct($commentDb, $contentDb, $fb_portal) {
+   public function __construct($commentDb, $contentDb) {
       $this->commentDb = $commentDb;
-      $this->fb_portal = $fb_portal;
       $this->commentDb->setTable("comments");
       $this->commentDb->setColumn("Name", "content", "PostD", "ContentId", "IP");
       $this->commentDb->setOrder("PostD", "desc");
@@ -351,13 +349,13 @@ class ManageComments extends ManageContents {
       // if(!isset($_POST['post_id'], $_POST['comment_name'], $_POST['comment_content'])) return FALSE;
       // if($_POST['post_id'] == NULL || $_POST['post_id'] == "" || $_POST['comment_name'] == NULL || $_POST['comment_name'] == "") return FALSE;
       $post_id          = intval($_POST['post_id']);
-      $fb_user          = $this->fb_portal->returnUser( ); // get user's fb full name
+      $fb_user          = $this->social->username; // get user's fb full name
       $comment_name     = "'".$fb_user['me']['name']."'";
       $comment_content  = "'".$this->commentDb->real_escape_string(htmlspecialchars($_POST['comment_content'], ENT_QUOTES))."'";
       $comment_ip       = "'".$_SERVER['REMOTE_ADDR']."'";
       // if($this->checkSpamBlacklist($comment_name) || $this->checkSpamBlacklist($comment_content)) return FALSE;
       $result = 0;
-      if($this->fb_portal->status( )) {
+      if(isset($_SESSION['loggedin'])) {
          $result = $this->commentDb->insertInTable($comment_name, $comment_content, "NOW( )", $post_id, $comment_ip);
       }
       return $result;
@@ -386,12 +384,12 @@ class ManageComments extends ManageContents {
  */
 class Displayer {
    protected $contents;
-   protected $fb_portal;
+   protected $comments;
    public $unhideFirstPost;
    
-   public function __construct($contents, $fb_portal) {
+   public function __construct($contents, $comments) {
       $this->contents = $contents;
-      $this->fb_portal = $fb_portal;
+      $this->comments = $comments;
       $this->unhideFirstPost = "unhidden";
    }
    
@@ -417,7 +415,7 @@ class Displayer {
 			         <input name='post_id' type='hidden' value='{$id}' />
 			         <table>
 			            <tr>";
-                     if($this->fb_portal->status( )){
+                     if(isset($_SESSION['loggedin'])){
                         echo "
 			               <th valign='top'>Your comment?</th>
 			               <td><textarea name='comment_content' rows='7' cols='50'></textarea><br />
@@ -573,7 +571,17 @@ class FacebookPortal {
       $this->connection->getLogoutUrl( ) : $this->connection->getLoginUrl( );
    }
    
-   public function out( ){
+   public function login( ) {
+      return $this->url( );
+   }
+   
+   public function logout( ) {
+      return $this->url( );
+   }
+   
+   public function check( ) {return;}
+   
+   public function out( ) {
       echo "<ul>";
       if($this->status( )) {
          echo "<li>Welcome home, {$this->user['me']['last_name']}-sama!</li>";
@@ -594,7 +602,7 @@ class SenecaPortal {
    protected $ch;
    protected $seneca_auth_status = false;
    
-   public function __construct( ){
+   public function __construct( ) {
       $this->ch = curl_init( );
       curl_setopt($this->ch, CURLOPT_URL, SENECA_AUTH_URL);
       curl_setopt($this->ch, CURLOPT_POST, true);
@@ -602,17 +610,31 @@ class SenecaPortal {
       curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
    }
    
-   public function __destruct( ){
+   public function __destruct( ) {
       curl_close($this->ch);
       unset($this->ch,
             $this->seneca_auth_status);
    }
    
-   public function status( ){
+   public function status( ) {
       return $this->seneca_auth_status;
    }
    
+   public function login( ) {
+      $form = "<form action='' method='post'> 
+               Username: <input type='text' name='username' /><br />
+               Password: <input type='text' name='password' /><br />
+               <inpupt type='submit' value='Login to Seneca!' />
+               </form>
+              ";
+      return $form;
+   }
+   
+   public function logout( ) {return;}
+   
    public function check($username, $password) {
+      $username = $_POST['username'];
+      $password = $_POST['password'];
       curl_setopt($this->ch, CURLOPT_POSTFIELDS, 
          "username={$username}&password={$password}&fromlogin=true&orgaccess=https&Button2=Log In");
       $store = curl_exec ($this->ch); 
@@ -630,7 +652,7 @@ class SocialConnect {
    
    public function status( ){
       $ret = false;
-      foreach($portals as $portal) {
+      foreach($this->portals as $portal) {
          if($portal->status( )) {
             $ret = true;
          }
@@ -639,8 +661,14 @@ class SocialConnect {
    }
    
    public function out( ){
-      if($this->status( )){
-         
+      //$res = null;
+      if(!isset($_SESSION['loggedin'])) {
+         foreach($this->portals as $portal) {
+            echo $portal->out( );
+         }
+      }
+      else {
+         echo "<a href='?logout'>Logout</a>";
       }
    }
    
