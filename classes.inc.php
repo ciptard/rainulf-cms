@@ -349,8 +349,8 @@ class ManageComments extends ManageContents {
       // if(!isset($_POST['post_id'], $_POST['comment_name'], $_POST['comment_content'])) return FALSE;
       // if($_POST['post_id'] == NULL || $_POST['post_id'] == "" || $_POST['comment_name'] == NULL || $_POST['comment_name'] == "") return FALSE;
       $post_id          = intval($_POST['post_id']);
-      $fb_user          = $this->social->username; // get user's fb full name
-      $comment_name     = "'".$fb_user['me']['name']."'";
+      //$fb_user          = $this->social->username; // get user's fb full name
+      $comment_name     = "'".$_SESSION['name']."'";
       $comment_content  = "'".$this->commentDb->real_escape_string(htmlspecialchars($_POST['comment_content'], ENT_QUOTES))."'";
       $comment_ip       = "'".$_SERVER['REMOTE_ADDR']."'";
       // if($this->checkSpamBlacklist($comment_name) || $this->checkSpamBlacklist($comment_content)) return FALSE;
@@ -579,20 +579,30 @@ class FacebookPortal {
       return $this->url( );
    }
    
-   public function check( ) {return;}
-   
    public function out( ) {
       echo "<ul>";
       if($this->status( )) {
-         echo "<li>Welcome home, {$this->user['me']['last_name']}-sama!</li>";
-         echo "<li><a href='{$this->url( )}'><img src=\"http://static.ak.fbcdn.net/rsrc.php/z2Y31/hash/cxrz4k7j.gif\"></a></li>";
+         //echo "<li>Welcome home, {$this->user['me']['last_name']}-sama!</li>";
+         echo "<li><a href='?logout'><img src=\"http://static.ak.fbcdn.net/rsrc.php/z2Y31/hash/cxrz4k7j.gif\"></a></li>";
+         $_SESSION['name'] = $this->user['me']['name'];
+         if(isset($_GET['logout'])) {
+            header("Location: {$this->url( )}");
+         }
+         //echo "<li><a href='?login'>Connect with Facebook</a></li>";
       }
       else {
-         echo "<li>Hello anon, would you like to login?</li>";
+         //echo "<li>Hello anon, would you like to login?</li>";
          echo "<li><a href='{$this->url( )}'><img src=\"http://static.ak.fbcdn.net/rsrc.php/zB6N8/hash/4li2k73z.gif\"></a></li>";
+         //echo "<li><a href='?logout'>Logout</a></li>";
       }
       echo "</ul>";
    }
+   
+   public function in( ){
+      return $this->out( );
+   }
+   
+   public function check($u = null, $p = null){return 0;}
 }
 
 /**
@@ -622,23 +632,40 @@ class SenecaPortal {
    
    public function login( ) {
       $form = "<form action='' method='post'> 
-               Username: <input type='text' name='username' /><br />
-               Password: <input type='text' name='password' /><br />
-               <inpupt type='submit' value='Login to Seneca!' />
+               <ul>
+               <li>Username: <input type='text' name='username' /></li>
+               <li>Password: <input type='password' name='password' /></li>
+               <li><input type='submit' value='Connect with Seneca' /></li>
+               </ul>
                </form>
               ";
       return $form;
    }
    
-   public function logout( ) {return;}
+   public function logout( ) {return 0;}
    
    public function check($username, $password) {
       $username = $_POST['username'];
       $password = $_POST['password'];
+      $ret = 0;
       curl_setopt($this->ch, CURLOPT_POSTFIELDS, 
          "username={$username}&password={$password}&fromlogin=true&orgaccess=https&Button2=Log In");
       $store = curl_exec ($this->ch); 
-      return !preg_match('/(failed)/i', $store);
+      if(!preg_match('/(failed)/i', $store)) {
+         $ret = 1;
+         $_SESSION['name'] = $username;
+      }
+      return $ret;
+   }
+   
+   public function out( ) {
+      echo "<ul>";
+      echo "<li><a href='?logout'>Logout from Seneca</a></li>";
+      echo "</ul>";
+   }
+   
+   public function in( ) {
+      echo $this->login( );
    }
 
 }
@@ -651,25 +678,33 @@ class SocialConnect {
    }
    
    public function status( ){
-      $ret = false;
+      $ret = 0;
       foreach($this->portals as $portal) {
-         if($portal->status( )) {
-            $ret = true;
-         }
+         $ret += $portal->status( );
       }
-      return $ret;
+      return !!$ret;
    }
    
    public function out( ){
       //$res = null;
       if(!isset($_SESSION['loggedin'])) {
          foreach($this->portals as $portal) {
-            echo $portal->out( );
+            echo $portal->in( );
          }
       }
       else {
-         echo "<a href='?logout'>Logout</a>";
+         foreach($this->portals as $portal) {
+            echo $portal->out( );
+         }
       }
+   }
+   
+   public function check($u, $p) {
+      $ret = 0;
+      foreach($this->portals as $portal) {
+         $ret += $portal->check($u, $p);
+      }
+      return !!$ret;
    }
    
 }

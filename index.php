@@ -54,7 +54,7 @@ require_once 'controller.inc.php';
 				</li>
 				<li>
 					<h2>Social Connect</h2>
-					<?php $fb_portal->out( ); ?>
+					<?php $social->out( ); ?>
 				</li>
 				<li>
 					<h2>Latest Entries</h2>
@@ -81,6 +81,39 @@ require_once 'controller.inc.php';
                   <li><a href="http://validator.w3.org/check?uri=referer" target="_blank">xHTML VALID</a></li>
                   <li><a href="http://jigsaw.w3.org/css-validator/check/referer" target="_blank">CSS VALID</a></li>
 					</ul>
+				</li>
+				<li>
+				   <script src="http://widgets.twimg.com/j/2/widget.js"></script>
+               <script>
+               new TWTR.Widget({
+                 version: 2,
+                 type: 'profile',
+                 rpp: 10,
+                 interval: 6000,
+                 width: 250,
+                 height: 300,
+                 theme: {
+                   shell: {
+                     background: '#4e8a30',
+                     color: '#ffffff'
+                   },
+                   tweets: {
+                     background: '#ffffff',
+                     color: '#3d273d',
+                     links: '#43a31a'
+                   }
+                 },
+                 features: {
+                   scrollbar: false,
+                   loop: false,
+                   live: false,
+                   hashtags: true,
+                   timestamp: true,
+                   avatars: false,
+                   behavior: 'all'
+                 }
+               }).render().setUser('rainulf').start();
+               </script>
 				</li>
 			</ul>
 		</div>

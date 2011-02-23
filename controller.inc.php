@@ -66,10 +66,14 @@ if($social->status( )) {
 }
 if(isset($_SESSION['loggedin'], $_GET['logout'])) {
    unset($_SESSION['loggedin']);
+   unset($_SESSION['name']);
    header("Location: . ");
 }
+// SenecaPortal
 if(isset($_POST['username'], $_POST['password'])) {
-   if($social->check( )) {
+   $username = $_POST['username'];
+   $password = $_POST['password'];
+   if($social->check($username, $password)) {
       $_SESSION['loggedin'] = 1;
    }
 }
