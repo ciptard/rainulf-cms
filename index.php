@@ -1,38 +1,32 @@
 <?php
-/*******************
- * Author: Rainulf *
- * Date  : Oct 19  *
- *******************/
 
 define("INDEX",TRUE);
-require_once 'controller.php';
+require_once 'controller.inc.php';
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
    <head>
-      <title>Rainulf</title>
-      <meta name="description" content="Jose Rainulf Pineda's official and personal website. Software and Web development - C/C++, PHP, mySQL, xHTML, JavaScript and Python languages." />
-      <meta name="keywords" content="jose rainulf pineda, rainulf's website, rainulf, phpmyinput, younha, rainulf younha, rainulf.ca, open source, seneca college, seneca" />
-      <meta name="author" content="Rainulf" />
+      <title><?php $display->displayIndividualPostInfo($indexposts, 'Title'); echo SITE_TITLE; ?></title>
+      <meta name="description" content="<?php echo SITE_DESC; ?>" />
+      <meta name="keywords" content="<?php echo SITE_KEYW; ?>" />
+      <meta name="author" content="<?php echo SITE_AUTHOR; ?>" />
       <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
       <link rel="stylesheet" type="text/css" href="style.css" />
-      <script src='script.js' type='text/javascript'></script>
    </head>
 <body onload="changeQuote( );">
-<a name='verytop'></a>
 <div id="header">
 	<div id="logo">
-		<h1><a href=".">rainulf.ca</a></h1>
+		<h1><a href="http://rainulf.ca/">rainulf.ca</a></h1>
 		<p id="slogan"></p>
 	</div>
 	<!-- end #logo -->
 	<div id="menu">
 		<ul>
 			<li class="first"><a href="./">Home</a></li>
-			<li><a href="#">About Me</a></li>
+			<li><a href="http://zenit.senecac.on.ca/wiki/index.php/User:Rainulf">About Me</a></li>
 			<li><a href="./source_codes/">Source Codes</a></li>
-			<li><a href="#">RSS Feed</a></li>
+			<li><a href="./rss.php">RSS Feed</a></li>
 			<li><a href="#" onclick="alert('rainulf1@gmail.com');">Contact Me</a></li>
 		</ul>
 	</div>
@@ -57,6 +51,10 @@ require_once 'controller.php';
 				onblur="if(this.value=='')this.value=this.defaultValue" onkeyup="ajaxsearch(this.value)" value="it's magic."  />
 						</fieldset>
 					</form>
+				</li>
+				<li>
+					<h2>Social Connect</h2>
+					<?php $social->out( ); ?>
 				</li>
 				<li>
 					<h2>Latest Entries</h2>
@@ -84,6 +82,39 @@ require_once 'controller.php';
                   <li><a href="http://jigsaw.w3.org/css-validator/check/referer" target="_blank">CSS VALID</a></li>
 					</ul>
 				</li>
+				<li>
+				   <script src="http://widgets.twimg.com/j/2/widget.js"></script>
+               <script>
+               new TWTR.Widget({
+                 version: 2,
+                 type: 'profile',
+                 rpp: 10,
+                 interval: 6000,
+                 width: 250,
+                 height: 300,
+                 theme: {
+                   shell: {
+                     background: '#4e8a30',
+                     color: '#ffffff'
+                   },
+                   tweets: {
+                     background: '#ffffff',
+                     color: '#3d273d',
+                     links: '#43a31a'
+                   }
+                 },
+                 features: {
+                   scrollbar: false,
+                   loop: false,
+                   live: false,
+                   hashtags: true,
+                   timestamp: true,
+                   avatars: false,
+                   behavior: 'all'
+                 }
+               }).render().setUser('rainulf').start();
+               </script>
+				</li>
 			</ul>
 		</div>
 		<div id="sidebar-bgbtm"></div>
@@ -91,9 +122,15 @@ require_once 'controller.php';
 	<!-- end #sidebar -->
 </div>
 <!-- end #page -->
+<div id="paging">
+   <?php $display->displayPaging($page); ?>
+</div>
+<!-- end #paging --> 
 <div id="footer">
-	<p>&copy; CopyEast, 2010. Design by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a>.</p>
+	<p>Copyleft 2011, All Wrongs Reserved. Design by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a>.</p>
 </div>
 <!-- end #footer -->
+<script src='script.js' type='text/javascript'></script>
+<script src='jquery-1.5.min.js' type='text/javascript'></script>
 </body>
 </html>
