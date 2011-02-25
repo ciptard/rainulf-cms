@@ -7,18 +7,60 @@
 
 if(!defined("INDEX")) die("Not allowed.");
 
+/******************************
+ * INCLUDES AND SETS
+ ******************************/
+ 
+/**
+ * set to report ALL errors
+ */
 error_reporting(-1);
+/**
+ * include conf (required)
+ */
+require_once './conf.inc.php';
+/**
+ * include helper functions (required)
+ */
+require_once './functions.inc.php';
+/**
+ * set custom error handler
+ */
+$old_error_handler = set_error_handler("customErrorHandler");
+/**
+ * set essentials
+ */
 session_start( );
 ob_start( );
 date_default_timezone_set("GMT");
-require_once './conf.inc.php';
-require_once './social_connect/facebook/facebook.inc.php';
-require_once './social_connect/twitter/twitteroauth.php';
-require_once './classes.inc.php';
-
 /**
- * Object creation
+ * set/fix magic quotes
  */
+if (get_magic_quotes_gpc( )) {
+   function stripslashes_deep($value) {
+      $value = is_array($value) ?
+      array_map('stripslashes_deep', $value) :
+      stripslashes($value);
+      return $value;
+   }
+   $_POST = array_map('stripslashes_deep', $_POST);
+   $_GET = array_map('stripslashes_deep', $_GET);
+   $_COOKIE = array_map('stripslashes_deep', $_COOKIE);
+   $_REQUEST = array_map('stripslashes_deep', $_REQUEST);
+}
+/**
+ * include classes (required)
+ */
+require_once './classes.inc.php';
+/**
+ * include optionals
+ */
+include_once './social_connect/facebook/facebook.inc.php';
+include_once './social_connect/twitter/twitteroauth.php';
+
+/******************************
+ * OBJECT CREATION
+ ******************************/
  
 // $user, $pass, $db, $host = "localhost", $charset = "utf8"
 // NOTE: objects that are passed hold a copy of the identifier, which points to the same object. Therefore, we need to instantiate another one for comments.
@@ -39,27 +81,10 @@ $comments  = new ManageComments($commentDb, $contentDb); // inherit - extends 'M
 $display   = new Displayer($contents, $comments);
 $files     = new ManageFiles("./source_codes/");
 
-
-/**
- * Fixed annoying magic quotes.
- */
-if (get_magic_quotes_gpc( )) {
-   function stripslashes_deep($value) {
-      $value = is_array($value) ?
-      array_map('stripslashes_deep', $value) :
-      stripslashes($value);
-      return $value;
-   }
-   $_POST = array_map('stripslashes_deep', $_POST);
-   $_GET = array_map('stripslashes_deep', $_GET);
-   $_COOKIE = array_map('stripslashes_deep', $_COOKIE);
-   $_REQUEST = array_map('stripslashes_deep', $_REQUEST);
-}
-
-
-/**
- * init variables and function calls
- */
+/******************************
+ * INIT VARS AND FUNC CALLS
+ ******************************/
+ 
 // Social Connect authentication
 if($social->status( )) {
    $_SESSION['loggedin'] = 1;
@@ -103,7 +128,7 @@ else {
 }
 // Call RSS feed
 if(isset($_GET['rss'])) {
-   // TODO: create RSS.
+   // DECIDE: RSS from index?
 }
 // Call comment methods if equal to comments.
 if(isset($_GET['comment_contentid'])) {

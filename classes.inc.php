@@ -454,7 +454,7 @@ class Displayer {
                $content
 			      </div>
 			      <div class=\"meta\">
-				      <p class=\"links\"><a href='#verytop'>Back to top</a> &nbsp;&bull;&nbsp; <a href='?id={$id}'>Permalink</a> &nbsp;&bull;&nbsp; <a href=\"javascript:unhide('id_comment_{$id}');\" class='comments'>Submit Comment</a></p>
+				      <p class=\"links\"><a href='#'>Back to top</a> &nbsp;&bull;&nbsp; <a href='?id={$id}'>Permalink</a> &nbsp;&bull;&nbsp; <a href=\"javascript:unhide('id_comment_{$id}');\" class='comments'>Submit Comment</a></p>
 			      </div>
 			      <div id='id_comment_{$id}' class='hidden'>
 			         <form action=\"\" method='post'>
@@ -779,6 +779,5 @@ class SocialConnect {
    }
    
 }
-
 
 ?>
