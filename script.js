@@ -32,27 +32,18 @@ function ViewSource( ) { window.location = "view-source:" + window.location.href
 
 function ajaxsearch(str) {
    if (str.length < 3) { 
-     var need = 3-str.length;
-     var wordcharacter = (need > 1) ? "characters" : "character"
-     document.getElementById("content").innerHTML="<p>Please enter " + need + " more " + wordcharacter + " to start. <br /><br />You are searching for '" + str + "'... </p>";
-     return;
+      var need = 3 - str.length;
+      var ret = false;
+      var wordcharacter = (need > 1) ? "characters" : "character";
+      $('#content').html("<p>Please enter " + need + " more " + wordcharacter + " to start. <br /><br />You are searching for '" + str + "'... </p>");
+      ret = false;
    }
-
-   if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
-     xmlhttp=new XMLHttpRequest();
+   else {
+      $('#content').html('<p><img src="./images/loading-gif-animation.gif" /></p>');
+      $('#content').load("search.php?s="+str);
+      ret = true;
    }
-   else {// code for IE6, IE5
-     xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-   }
-   document.getElementById("content").innerHTML="<p>Searching for '" + str + "'... </p>";
-   xmlhttp.onreadystatechange=function() {
-     if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-       document.getElementById("content").innerHTML=xmlhttp.responseText;
-     }
-   }
-
-   xmlhttp.open("GET","search.php?s="+str,true);
-   xmlhttp.send();
+   return ret;
 }
 
 function unhide(divID) {

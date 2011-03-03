@@ -70,6 +70,7 @@ require_once 'controller.inc.php';
                   <li><a href="http://twitter.com/rainulf" target="_blank">Rainulf@Twitter</a></li>
                   <li><a href="http://bit.ly/rainulfirc" target="_blank">Rainulf@IRC Freenode</a></li>
                   <li><a href="http://twitter.com/younhaholic" target="_blank">Younha@Twitter</a></li>
+                  <li><a href="./irc_logs">Rainulf's IRC Logs</a></li>
                   <li><a href="http://helloyounha.com/xe/" target="_blank">Hello!Younha!</a></li>
                   <li><a href="http://www.animenewsnetwork.com/" target="_blank">Anime News Network</a></li>
                   <li><a href="http://myanimelist.net/" target="_blank">MyAnimeList</a></li>
@@ -129,7 +130,7 @@ require_once 'controller.inc.php';
 	<p>Copyleft 2011, All Wrongs Reserved. Design by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a>.</p>
 </div>
 <!-- end #footer -->
-<script src='script.js' type='text/javascript'></script>
-<script src='jquery-1.5.min.js' type='text/javascript'></script>
+<script src='./jquery-1.5.min.js' type='text/javascript'></script>
+<script src='./script.js' type='text/javascript'></script>
 </body>
 </html>
