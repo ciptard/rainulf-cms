@@ -44,13 +44,16 @@ require_once 'controller.inc.php';
 		<div id="sidebar-content">
 			<ul>
 				<li id="search">
-					<h2>Instant Search</h2>
+					<h2>Remote Control</h2>
 					<form method="get" action="">
 						<fieldset>
-						<input type="text" id="s" name="s" onfocus="if(this.value==this.defaultValue)this.value=''" 
-				onblur="if(this.value=='')this.value=this.defaultValue" onkeyup="ajaxsearch(this.value)" value="it's magic."  />
+						<input type="text" id="search_bar" name="search_bar" onfocus="if(this.value==this.defaultValue)this.value=''" 
+				onblur="if(this.value=='')this.value=this.defaultValue" value="Instant Search"  />
 						</fieldset>
 					</form>
+               <ul>
+                  <li><?php $display->displayPaging($page); ?></li>
+               </ul>
 				</li>
 				<li>
 					<h2>Social Connect</h2>
@@ -121,11 +124,6 @@ require_once 'controller.inc.php';
 	</div>
 	<!-- end #sidebar -->
 </div>
-<!-- end #page -->
-<div id="paging">
-   <?php $display->displayPaging($page); ?>
-</div>
-<!-- end #paging --> 
 <div id="footer">
 	<p>Copyleft 2011, All Wrongs Reserved. Design by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a>.</p>
 </div>

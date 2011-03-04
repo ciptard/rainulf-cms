@@ -315,8 +315,9 @@ class ManageContents {
    public function searchPost($id = 0, $strict = FALSE) {
       // if(!isset($_GET['s'], $_GET['id'])) return FALSE;
 
-      if(isset($_GET['s'])) {
-         $searchString = $this->contentDb->real_escape_string(htmlspecialchars($_GET['s'], ENT_QUOTES));
+      if(isset($_GET['search_bar'])) {
+         $searchString = htmlspecialchars($_GET['search_bar'], ENT_QUOTES);
+         $searchString = $this->contentDb->real_escape_string($searchString);
          if(!$strict) {
             $searchString = "%" . $searchString . "%";
          }
@@ -537,7 +538,8 @@ class Displayer {
          }
       }
       else {
-         echo "<p>'".htmlspecialchars($_GET['s'], ENT_QUOTES)."' cannot be found.</p>";
+         $string = htmlspecialchars($_GET['search_bar'], ENT_QUOTES);
+         echo "<p>'{$string}' cannot be found.</p>";
       }
    }
    public function displayPaging($page, $title = false) {
@@ -545,33 +547,31 @@ class Displayer {
          $next = "";
          $maxPages = $this->contents->returnTotalContents( ) / CONTENTS_PER_PG;
          $maxPages = round($maxPages);
-         echo "<p>";
-         if($page > 1) {
-            echo "[<a href=\"./?page=1\">First</a>]";
-            echo "[<a href=\"./?page=" . ($page - 1) . "\">Prev</a>]";
-         }
-         else {
-            echo "[First]";
-            echo "[Prev]";
-         }
-         echo " Page: {$page} of {$maxPages} ";
-         if($page < $maxPages) {
-            echo "[<a href=\"./?page=" . $next = $next + ($page + 1) . "\">Next</a>]";
-            echo "[<a href=\"./?page={$maxPages}\">Last</a>]";
-         }
-         else {
-            echo "[Next]";
-            echo "[Last]";
-         }
-         echo "</p>\n";
-      }
-      else {
-         if($page == 1) {
-            $page = "";
-         }
-         else {
-            echo "Page {$page} - ";
-         }
+         //if($page > 1) {
+            //echo "[<a id=\"first_page\" class=\"paging\" href=\"?page=1\">First</a>]";
+            echo "[<a id=\"prev_page\" class=\"paging\" href=\"?page=" . ($page - 1) . "\">Prev</a>]";
+         //}
+         //else {
+            //echo "[First]";
+            //echo "[Prev]";
+         //}
+         echo " <b>Page:</b> <span id='cur_page_num'>{$page}</span> of {$maxPages} ";
+         //if($page < $maxPages) {
+            echo "[<a id=\"next_page\" class=\"paging\" href=\"?page=" . $next = $next + ($page + 1) . "\">Next</a>]";
+            //echo "[<a id=\"last_page\" class=\"paging\" href=\"?page={$maxPages}\">Last</a>]";
+         //}
+         //else {
+            //echo "[Next]";
+            //echo "[Last]";
+         //}
+      //}
+      //else {
+      //   if($page == 1) {
+      //      $page = "";
+      //   }
+      //   else {
+      //      echo "Page {$page} - ";
+      //   }
       }
    }
 }

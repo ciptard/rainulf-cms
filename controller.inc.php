@@ -93,8 +93,8 @@ if(isset($_GET['page']) && !isset($_GET['id'])) {
 else {
    $page = 1;
 }
-// Call the default searchPost( ) if $_GET['s'] is set.
-if(isset($_GET['s'])) {
+// Call the default searchPost( ) if $_GET['search_bar'] is set.
+if(isset($_GET['search_bar'])) {
    $indexposts = $contents->searchPost( );
 }
 // Otherwise, if $id is true, call searchPost($id). If $id is 0, call indexPosts( )
