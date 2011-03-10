@@ -1,7 +1,16 @@
+<?php
+require "./config.inc.php";
+if(isset($_GET['view'])) {
+   $logfile = $_GET['view'];
+   $logfile = cleanString($logfile);
+   $log = file_get_contents(CHAN_LOC."/".$logfile);
+}
+?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Rainulf's IRC logs</title>
+<title><?php if(isset($logfile)) echo "{$logfile} - "?>Rainulf's IRC logs</title>
 <meta name="description" content="The public IRC logs of Rainulf." />
 <meta name="keywords" content="freenode, rainulf, irc logs, seneca irc logs, public irc logs" />
 <meta name="author" content="Rainulf" />
@@ -17,8 +26,6 @@
 <table width='100%'>
 <tr>
 <?php
-
-require "./config.inc.php";
 $files = array( );
 
 $channel = (isset($_GET['channel'])) ? $_GET['channel'] : "";
@@ -51,9 +58,6 @@ if(!empty($files)) {
    echo "</td>\n";
    echo "<td valign='top'>\n"; 
    if(isset($_GET['view'])) {
-      $logfile = $_GET['view'];
-      $logfile = cleanString($logfile);
-      $log = file_get_contents(CHAN_LOC."/".$logfile);
       echo "<p><b>IRC log name:</b> $logfile</p>\n";
       echo "<textarea cols='120' rows='25' readonly='readonly'>\n";
       echo $log;
@@ -95,9 +99,7 @@ function cleanString($string){
 </tr>
 </table>
 <center><p>
-    <a href="http://validator.w3.org/check?uri=referer"><img
-        src="http://www.w3.org/Icons/valid-xhtml10"
-        alt="Valid XHTML 1.0 Transitional" height="31" width="88" border="0" /></a>
+    <a href="http://validator.w3.org/check?uri=referer">xHTML valid</a>
   </p></center>
 </body>
 </html>
