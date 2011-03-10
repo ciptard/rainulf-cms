@@ -30,35 +30,81 @@ function changeQuote( ) {
 
 function ViewSource( ) { window.location = "view-source:" + window.location.href; }
 
-function ajaxsearch(str) {
-   if (str.length < 3) { 
-     var need = 3-str.length;
-     var wordcharacter = (need > 1) ? "characters" : "character"
-     document.getElementById("content").innerHTML="<p>Please enter " + need + " more " + wordcharacter + " to start. <br /><br />You are searching for '" + str + "'... </p>";
-     return;
-   }
-
-   if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
-     xmlhttp=new XMLHttpRequest();
-   }
-   else {// code for IE6, IE5
-     xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-   }
-   document.getElementById("content").innerHTML="<p>Searching for '" + str + "'... </p>";
-   xmlhttp.onreadystatechange=function() {
-     if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-       document.getElementById("content").innerHTML=xmlhttp.responseText;
-     }
-   }
-
-   xmlhttp.open("GET","search.php?s="+str,true);
-   xmlhttp.send();
-}
-
 function unhide(divID) {
    var item = document.getElementById(divID);
    if (item) {
       item.className=(item.className=='hidden')?'unhidden':'hidden';
    }
 }
+
+// jQuery functions
+$(document).ready(function(){
+
+   // Instant Search
+   $("#search_bar").keyup(function(event){
+      var str = $(this).val( );
+      // must only trigger if letter or backspace
+      if(event.which >= 65 && event.which <= 90 || event.which == 8) { 
+         if (str.length < 3) { 
+            var need = 3 - str.length;
+            var wordcharacter = (need > 1) ? "characters" : "character";
+            $('#content').html("<p>Please enter " + need + " more " + wordcharacter + " to start. <br /><br />You are searching for '" + str + "'... </p>");
+         }
+         else {
+            // $('#content').html('<p><img src="./images/loading-gif-animation.gif" /></p>'); TODO: make this work
+            $('#content').hide( ).load("show.php?search_bar="+str).fadeIn('slow');
+         }
+      }
+   });
+   
+   // Paging
+   $('a#next_page').click(function() {
+      var pageLink = $('a#next_page').attr('href');
+      var varSplitted = pageLink.split('=');
+      var pageNum  = varSplitted[1];
+      $('#content').hide( ).load("show.php" + pageLink, function(response, status, xhr) {
+          if (status == "error") {
+            // TODO: handle error
+          }
+          else {
+            pageNum = pageNum-0;
+            $('#cur_page_num').text(pageNum);
+            if(pageNum < 1) {
+               $('a#prev_page').attr('href', "?page=1");
+            }
+            else {
+               $('a#prev_page').attr('href', "?page=" + eval(pageNum-1));
+            }
+            $('a#next_page').attr('href', "?page=" + eval(pageNum+1));
+            $(this).fadeIn();
+          }
+      });
+      return false; // Disable link
+   });
+
+   $('a#prev_page').click(function() {
+      var pageLink = $('a#prev_page').attr('href');
+      var varSplitted = pageLink.split('=');
+      var pageNum  = varSplitted[1];
+      $('#content').hide( ).load("show.php" + pageLink, function(response, status, xhr) {
+          if (status == "error") {
+            // TODO: handle error
+          }
+          else {
+            pageNum = pageNum-0;
+            $('#cur_page_num').text(pageNum);
+            if(pageNum < 1) {
+               $('a#prev_page').attr('href', "?page=1");
+            }
+            else {
+               $('a#prev_page').attr('href', "?page=" + eval(pageNum-1));
+            }
+            $('a#next_page').attr('href', "?page=" + eval(pageNum+1));
+            $(this).fadeIn();
+          }
+      });
+      return false; // Disable link
+   });
+   
+});
 

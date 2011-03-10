@@ -2,7 +2,7 @@
 /******************************
  * Author      : Rainulf      *
  * Date Started: Oct 19, 2010 *
- * Last Updated: Feb 14, 2011 *
+ * Last Updated: Feb 24, 2011 *
  ******************************/
 
 if(!defined("INDEX")) die("Not allowed.");
@@ -10,7 +10,6 @@ if(!defined("INDEX")) die("Not allowed.");
  * Database connection.
  * Contains method for selecting/inserting from/to tables.
  */
-// TODO: Try prepared statements
 class DatabaseConnection {
    protected $link;                // Database link
    
@@ -48,7 +47,9 @@ class DatabaseConnection {
       $column = array( );
       $numargs = func_num_args( );
       $arg_list = func_get_args( );
-      if(count($arg_list) > 1 || $numargs > 1) $columnImploded = implode(",", $arg_list);
+      if(count($arg_list) > 1 || $numargs > 1) {
+         $columnImploded = implode(",", $arg_list);
+      }
       $this->column = $columnImploded;
       
       return isset($this->column);
@@ -87,16 +88,24 @@ class DatabaseConnection {
    // the following functions are used for generating prepared statements
    public function generateSelectAllWithLimit( ) {
       $queryString = " SELECT {$this->column} FROM {$this->table} ";
-      if(isset($this->orderby, $this->order)) $queryString .= " ORDER BY {$this->orderby} {$this->order} ";
-      if(isset($this->limitx, $this->limity)) $queryString .= " LIMIT {$this->limitx}, {$this->limity} ";
+      if(isset($this->orderby, $this->order)) {
+         $queryString .= " ORDER BY {$this->orderby} {$this->order} ";
+      }
+      if(isset($this->limitx, $this->limity)) {
+         $queryString .= " LIMIT {$this->limitx}, {$this->limity} ";
+      }
       return $this->link->prepare($queryString);
    }
    
    public function generateSelectSearchWithLimit($where, $strict = FALSE) {
       $searchMethod = ($strict) ? " {$where} = ? " : " {$where} LIKE ? ";
       $queryString = " SELECT {$this->column} FROM {$this->table} WHERE $searchMethod ";
-      if(isset($this->orderby, $this->order)) $queryString .= " ORDER BY {$this->orderby} {$this->order} ";
-      if(isset($this->limitx, $this->limity)) $queryString .= " LIMIT {$this->limitx}, {$this->limity} ";
+      if(isset($this->orderby, $this->order)) {
+         $queryString .= " ORDER BY {$this->orderby} {$this->order} ";
+      }
+      if(isset($this->limitx, $this->limity)) {
+         $queryString .= " LIMIT {$this->limitx}, {$this->limity} ";
+      }
       return $this->link->prepare($queryString);
    }
    
@@ -109,8 +118,12 @@ class DatabaseConnection {
    public function whereSearchLike($where, $what, $strict = FALSE) {
       $searchMethod = ($strict) ? "{$where} = '{$what}'" : "{$where} LIKE '%{$what}%'";
       $queryString = " SELECT {$this->column} FROM {$this->table} WHERE $searchMethod ";
-      if(isset($this->orderby, $this->order)) $queryString .= " ORDER BY {$this->orderby} {$this->order} ";
-      if(isset($this->limitx, $this->limity)) $queryString .= " LIMIT {$this->limitx}, {$this->limity} ";
+      if(isset($this->orderby, $this->order)) {
+         $queryString .= " ORDER BY {$this->orderby} {$this->order} ";
+      }
+      if(isset($this->limitx, $this->limity)) {
+         $queryString .= " LIMIT {$this->limitx}, {$this->limity} ";
+      }
       return $this->link->query($queryString);
    }
    
@@ -118,7 +131,9 @@ class DatabaseConnection {
       $values_arr = array( );
       $numargs = func_num_args( );
       $arg_list = func_get_args( );
-      if(count($arg_list) > 1 || $numargs > 1) $values_arrImploded = implode(",", $arg_list);
+      if(count($arg_list) > 1 || $numargs > 1) {
+         $values_arrImploded = implode(",", $arg_list);
+      }
       $values_string = $values_arrImploded;
       $queryString = " INSERT INTO {$this->table} ({$this->column}) VALUES ($values_string) ";
       return $this->link->query($queryString);
@@ -126,8 +141,12 @@ class DatabaseConnection {
    
    public function indexResult( ) {
       $queryString = " SELECT {$this->column} FROM {$this->table} ";
-      if(isset($this->orderby, $this->order)) $queryString .= " ORDER BY {$this->orderby} {$this->order} ";
-      if(isset($this->limitx, $this->limity)) $queryString .= " LIMIT {$this->limitx}, {$this->limity} ";
+      if(isset($this->orderby, $this->order)) {
+         $queryString .= " ORDER BY {$this->orderby} {$this->order} ";
+      }
+      if(isset($this->limitx, $this->limity)) {
+         $queryString .= " LIMIT {$this->limitx}, {$this->limity} ";
+      }
       return $this->link->query($queryString);
    }
    
@@ -204,9 +223,17 @@ class ManageFiles {
           $arr[$dat] = $filename;
         }
       }
-      if (!ksort($arr)) return false;
-      if ($srt) return array_reverse($arr);
-      else return $arr;
+      $ret = null;
+      if(!ksort($arr)) {
+         $ret = false;
+      }
+      else if($srt) {
+         $ret = array_reverse($arr);
+      }
+      else {
+         $ret = $arr;
+      }
+      return $ret;
    }
 }
 
@@ -215,7 +242,7 @@ class ManageFiles {
  */
 class ManageContents {
    protected $contentDb;
-   public $totalContents;
+   protected $totalContents;
    
    public function __construct($database) {
       $this->contentDb = $database;
@@ -231,6 +258,10 @@ class ManageContents {
       unset($this->contentDb);
    }
    
+   public function returnTotalContents( ) {
+      return $this->totalContents;
+   }
+   
    public function commonArrayFetch ($result) {
       $arr = array( );
       $arrStringColumns = "";
@@ -242,7 +273,9 @@ class ManageContents {
             $columnsExploded = explode(',', $this->commentDb->returnThe("column")); 
             break;
       }
-      foreach($columnsExploded as $column) $arrStringColumns .= "'{$column}' => \$row['{$column}'], ";
+      foreach($columnsExploded as $column) {
+         $arrStringColumns .= "'{$column}' => \$row['{$column}'], ";
+      }
       $arrStringColumns = rtrim($arrStringColumns, ", ");
       //echo $arrStringColumns;
       while($row = $result->fetch_array( )) {
@@ -282,8 +315,9 @@ class ManageContents {
    public function searchPost($id = 0, $strict = FALSE) {
       // if(!isset($_GET['s'], $_GET['id'])) return FALSE;
 
-      if(isset($_GET['s'])) {
-         $searchString = $this->contentDb->real_escape_string(htmlspecialchars($_GET['s'], ENT_QUOTES));
+      if(isset($_GET['search_bar'])) {
+         $searchString = htmlspecialchars($_GET['search_bar'], ENT_QUOTES);
+         $searchString = $this->contentDb->real_escape_string($searchString);
          if(!$strict) {
             $searchString = "%" . $searchString . "%";
          }
@@ -331,7 +365,7 @@ class ManageComments extends ManageContents {
    public function __construct($commentDb, $contentDb) {
       $this->commentDb = $commentDb;
       $this->commentDb->setTable("comments");
-      $this->commentDb->setColumn("id", "Title", "content", "PostD", "ContentId");
+      $this->commentDb->setColumn("Name", "content", "PostD", "ContentId", "IP");
       $this->commentDb->setOrder("PostD", "desc");
       $this->commentDb->setLimit(0, COMMENTS_PER_CONTENT);
       // Since $contentDb already holds identifier to obj, its table, column, order, etc should already be set
@@ -339,24 +373,33 @@ class ManageComments extends ManageContents {
    }
    
    public function getCommentsForContentId( ) {
-      if(!isset($_GET['comment_contentid'])) return FALSE;
-      $comment_contentid = intval($_GET['comment_contentid']);
-      $result = $this->commentDb->whereSearchLike("ContentId", $comment_contentid, 1);
-      $arr = $this->commonArrayFetch($result);
-      return $arr;
+      $ret = null;
+      if(!isset($_GET['comment_contentid'])) {
+         $ret = false;
+      }
+      else {
+         $comment_contentid = intval($_GET['comment_contentid']);
+         $result = $this->commentDb->whereSearchLike("ContentId", $comment_contentid, 1);
+         $arr = $this->commonArrayFetch($result);
+         $ret = $arr;
+      }
+      return $ret;
    }
    
    public function insertCommentsInId( ) {
-      // if(!isset($_POST['post_id'], $_POST['comment_name'], $_POST['comment_content'])) return FALSE;
-      // if($_POST['post_id'] == NULL || $_POST['post_id'] == "" || $_POST['comment_name'] == NULL || $_POST['comment_name'] == "") return FALSE;
-      $post_id          = intval($_POST['post_id']);
-      //$fb_user          = $this->social->username; // get user's fb full name
-      $comment_name     = "'".$_SESSION['name']."'";
-      $comment_content  = "'".$this->commentDb->real_escape_string(htmlspecialchars($_POST['comment_content'], ENT_QUOTES))."'";
-      $comment_ip       = "'".$_SERVER['REMOTE_ADDR']."'";
-      // if($this->checkSpamBlacklist($comment_name) || $this->checkSpamBlacklist($comment_content)) return FALSE;
-      $result = 0;
-      if(isset($_SESSION['loggedin'])) {
+      $result = null;
+      if(!isset($_SESSION['loggedin'], $_SESSION['name'])) {
+         $result = false;
+      }
+      else {
+         // if(!isset($_POST['post_id'], $_POST['comment_name'], $_POST['comment_content'])) return FALSE;
+         // if($_POST['post_id'] == NULL || $_POST['post_id'] == "" || $_POST['comment_name'] == NULL || $_POST['comment_name'] == "") return FALSE;
+         $post_id          = intval($_POST['post_id']);
+         //$fb_user          = $this->social->username; // get user's fb full name
+         $comment_name     = "'".$_SESSION['name']."'";
+         $comment_content  = "'".$this->commentDb->real_escape_string(htmlspecialchars($_POST['comment_content'], ENT_QUOTES))."'";
+         $comment_ip       = "'".$_SERVER['REMOTE_ADDR']."'";
+         // if($this->checkSpamBlacklist($comment_name) || $this->checkSpamBlacklist($comment_content)) return FALSE;
          $result = $this->commentDb->insertInTable($comment_name, $comment_content, "NOW( )", $post_id, $comment_ip);
       }
       return $result;
@@ -374,7 +417,8 @@ class ManageComments extends ManageContents {
    }
    
    public function __destruct( ) {
-      unset($this->contentDb, $this->commentDb);
+      unset($this->contentDb, 
+            $this->commentDb);
    }
    
    
@@ -395,10 +439,12 @@ class Displayer {
    }
    
    public function __destruct( ) {
-      unset($this->contents, $this->unhideFirstPost);
+      unset($this->contents, 
+            $this->unhideFirstPost);
    }
    
    public function displayPost($id, $title, $date, $content, $numofcomments) {
+      // BEGIN
       echo "
          <a name='{$id}'></a>
 		   <div class='post'>
@@ -409,21 +455,22 @@ class Displayer {
                $content
 			      </div>
 			      <div class=\"meta\">
-				      <p class=\"links\"><a href='#verytop'>Back to top</a> &nbsp;&bull;&nbsp; <a href=\"javascript:unhide('id_comment_{$id}');\" class='comments'>Comments (not available yet)</a></p>
+				      <p class=\"links\"><a href='#verytop'>Back to top</a> &nbsp;&bull;&nbsp; <a href='?id={$id}'>Permalink</a> &nbsp;&bull;&nbsp; <a href=\"javascript:unhide('id_comment_{$id}');\" class='comments'>Submit Comment</a></p>
 			      </div>
 			      <div id='id_comment_{$id}' class='hidden'>
 			         <form action=\"\" method='post'>
+			         <input name='post_id' type='hidden' value='{$id}' />
 			         <table>
 			            <tr>";
                      if(isset($_SESSION['loggedin'])){
                         echo "
-			               <th valign='top'>Comments</th>
+			               <th valign='top'>Your comment?</th>
 			               <td><textarea name='comment_content' rows='7' cols='50'></textarea><br />
 			               <input type='submit' value='Submit!' /></td>";
                      }
                      else{
                         echo "
-                        <th valign='top'>Anon may not comment.</th>";
+                        <th valign='top'>You must login to comment.</th>";
                      }
                      echo "
 			            </tr>
@@ -432,7 +479,7 @@ class Displayer {
 			      </div>
 			   </div>
 		   </div>
-	    ";
+	    "; // END
 	    if($this->unhideFirstPost == "unhidden") $this->unhideFirstPost = "hidden";
    }
    
@@ -459,6 +506,7 @@ class Displayer {
          echo "     <title>" . $arr[$i]['Title'] . "</title>\n";
          echo "     <link>".SITE_URL."?id=" . $arr[$i]['id'] . "</link>\n";
          echo "     <description><![CDATA[ " . $arr[$i]['content'] . " ]]></description>\n";
+         // REF: http://php.net/manual/en/function.mktime.php
          echo "     <pubDate>" . date("r", mktime($time[0], $time[1], $time[2], $date[1], $date[2], $date[0])) . "</pubDate>\n";
          echo "   </item>\n";
       }
@@ -474,7 +522,7 @@ class Displayer {
    }
    
    public function displayFiles($arr) {
-      $numOfPosts = count($arr);
+      //$numOfPosts = count($arr);
       echo "<ul>";
       foreach($arr as $a => $b) {
          echo "<li><a href='./source_codes/{$b}'>$b</a></li>";
@@ -490,20 +538,41 @@ class Displayer {
          }
       }
       else {
-         echo "<p>'".htmlspecialchars($_GET['s'], ENT_QUOTES)."' cannot be found.</p>";
+         $string = htmlspecialchars($_GET['search_bar'], ENT_QUOTES);
+         echo "<p>'{$string}' cannot be found.</p>";
       }
    }
-   public function displayPaging($page) {
-      $next = "";
-      $maxPages = $this->contents->totalContents / CONTENTS_PER_PG;
-      echo "<p>";
-      if($page > 1) {
-         echo "[<a href=\"./?page=" . ($page - 1) . "\">Prev</a>]";
+   public function displayPaging($page, $title = false) {
+      if(!$title) {
+         $next = "";
+         $maxPages = $this->contents->returnTotalContents( ) / CONTENTS_PER_PG;
+         $maxPages = round($maxPages);
+         //if($page > 1) {
+            //echo "[<a id=\"first_page\" class=\"paging\" href=\"?page=1\">First</a>]";
+            echo "[<a id=\"prev_page\" class=\"paging\" href=\"?page=" . ($page - 1) . "\">Prev</a>]";
+         //}
+         //else {
+            //echo "[First]";
+            //echo "[Prev]";
+         //}
+         echo " <b>Page:</b> <span id='cur_page_num'>{$page}</span> of {$maxPages} ";
+         //if($page < $maxPages) {
+            echo "[<a id=\"next_page\" class=\"paging\" href=\"?page=" . $next = $next + ($page + 1) . "\">Next</a>]";
+            //echo "[<a id=\"last_page\" class=\"paging\" href=\"?page={$maxPages}\">Last</a>]";
+         //}
+         //else {
+            //echo "[Next]";
+            //echo "[Last]";
+         //}
+      //}
+      //else {
+      //   if($page == 1) {
+      //      $page = "";
+      //   }
+      //   else {
+      //      echo "Page {$page} - ";
+      //   }
       }
-      if($page < $maxPages) {
-         echo "[<a href=\"./?page=" . $next = $next + ($page + 1) . "\">Next</a>]";
-      }
-      echo "</p>";
    }
 }
 
@@ -583,7 +652,7 @@ class FacebookPortal {
       echo "<ul>";
       if($this->status( )) {
          //echo "<li>Welcome home, {$this->user['me']['last_name']}-sama!</li>";
-         echo "<li><a href='?logout'><img src=\"http://static.ak.fbcdn.net/rsrc.php/z2Y31/hash/cxrz4k7j.gif\"></a></li>";
+         //echo "<li><a href='?logout'><img src=\"images/fb_logout.gif\"></a></li>";
          $_SESSION['name'] = $this->user['me']['name'];
          if(isset($_GET['logout'])) {
             header("Location: {$this->url( )}");
@@ -592,7 +661,7 @@ class FacebookPortal {
       }
       else {
          //echo "<li>Hello anon, would you like to login?</li>";
-         echo "<li><a href='{$this->url( )}'><img src=\"http://static.ak.fbcdn.net/rsrc.php/zB6N8/hash/4li2k73z.gif\"></a></li>";
+         echo "<li><a href='{$this->url( )}'><img src=\"images/fb_login.gif\"></a></li>";
          //echo "<li><a href='?logout'>Logout</a></li>";
       }
       echo "</ul>";
@@ -631,10 +700,12 @@ class SenecaPortal {
    }
    
    public function login( ) {
-      $form = "<form action='' method='post'> 
+      $form = "<form action='" . SITE_URL_HTTPS . "' method='post'> 
                <ul>
-               <li>Username: <input type='text' name='username' /></li>
-               <li>Password: <input type='password' name='password' /></li>
+               <li>Username: <input type='text' name='username' onfocus=\"if(this.value==this.defaultValue)this.value=''\" 
+				onblur=\"if(this.value=='')this.value=this.defaultValue\" value=\"seneca username\"  /></li>
+               <li>Password: <input type='password' name='password' onfocus=\"if(this.value==this.defaultValue)this.value=''\" 
+				onblur=\"if(this.value=='')this.value=this.defaultValue\" value=\"seneca password\"  /></li>
                <li><input type='submit' value='Connect with Seneca' /></li>
                </ul>
                </form>
@@ -660,8 +731,8 @@ class SenecaPortal {
    
    public function out( ) {
       echo "<ul>";
-      echo "<li><a href='?logout'>Logout from Seneca</a></li>";
-      echo "</ul>";
+      echo "<li><a href='?logout'>Log me out!</a></li>";
+      echo "</ul>\n";
    }
    
    public function in( ) {
