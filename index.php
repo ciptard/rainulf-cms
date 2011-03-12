@@ -86,7 +86,7 @@ require_once 'controller.inc.php';
 					</ul>
 				</li>
 				<li>
-               <script>
+               <script type='text/javascript'>
                <?php echo file_get_contents("http://widgets.twimg.com/j/2/widget.js"); ?>
                new TWTR.Widget({
                  version: 2,
