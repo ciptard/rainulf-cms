@@ -4,9 +4,12 @@ quote = new Array("Programming is magic.",
                   "The future belongs to those who believe in the beauty of their dreams.",
                   "Intellectual growth should commence at birth and cease only at death.",
                   "The true meaning of life is to plant trees, whose shade you do not expect to sit.",
-                  "The science of today is the technology of tomorrow.",
-                  "The future starts today, not tomorrow.",
-                  "Logic will get you from A to B. Imagination will take you everywhere."
+                  "Logic will get you from A to B. Imagination will take you everywhere.",
+                  "Fighting for peace is like screwing for virginity.",
+                  "I put a dollar in a change machine. Nothing changed.",
+                  "Catholic - which I was until I reached the age of reason.",
+                  "'No comment' is a comment.",
+                  "It isn't fair: the caterpillar does all the work, and the butterfly gets all the glory."
 );
 
 
@@ -51,22 +54,14 @@ $(document).ready(function(){
       var pageLink = $('a#next_page').attr('href');
       var varSplitted = pageLink.split('=');
       var pageNum  = varSplitted[1];
+      var maxPageNum = $('span#max_page_num').text( );
       $('#content').hide( ).load("show.php" + pageLink, function(response, status, xhr) {
-          if (status == "error") {
-            // TODO: handle error
-          }
-          else {
-            pageNum = pageNum-0;
-            $('#cur_page_num').text(pageNum);
-            if(pageNum < 1) {
-               $('a#prev_page').attr('href', "?page=1");
-            }
-            else {
-               $('a#prev_page').attr('href', "?page=" + eval(pageNum-1));
-            }
-            $('a#next_page').attr('href', "?page=" + eval(pageNum+1));
-            $(this).fadeIn();
-          }
+         if (status == "error") {
+           // TODO: handle error
+         }
+         else {
+            pageAction(pageNum, maxPageNum, this);
+         }
       });
       return false; // Disable link
    });
@@ -75,25 +70,35 @@ $(document).ready(function(){
       var pageLink = $('a#prev_page').attr('href');
       var varSplitted = pageLink.split('=');
       var pageNum  = varSplitted[1];
+      var maxPageNum = $('span#max_page_num').text( );
       $('#content').hide( ).load("show.php" + pageLink, function(response, status, xhr) {
-          if (status == "error") {
+         if (status == "error") {
             // TODO: handle error
-          }
-          else {
-            pageNum = pageNum-0;
-            $('#cur_page_num').text(pageNum);
-            if(pageNum < 1) {
-               $('a#prev_page').attr('href', "?page=1");
-            }
-            else {
-               $('a#prev_page').attr('href', "?page=" + eval(pageNum-1));
-            }
-            $('a#next_page').attr('href', "?page=" + eval(pageNum+1));
-            $(this).fadeIn();
-          }
+         }
+         else {
+            pageAction(pageNum, maxPageNum, this);
+         }
       });
       return false; // Disable link
    });
+   
+   function pageAction(pageNum, maxPageNum, obj) {
+      pageNum = pageNum - 0;
+      $('#cur_page_num').text(pageNum);
+      if(pageNum <= 1) {
+         $('a#prev_page').removeAttr('href');
+      }
+      else {
+         $('a#prev_page').attr('href', "?page=" + eval(pageNum - 1));
+      }
+      if(pageNum < maxPageNum) {
+         $('a#next_page').attr('href', "?page=" + eval(pageNum + 1));
+      }
+      else {
+         $('a#next_page').removeAttr('href');
+      }
+      $(obj).fadeIn();
+   }
    
 });
 

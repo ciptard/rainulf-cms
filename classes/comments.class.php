@@ -6,7 +6,7 @@
  ******************************/
 
 if(!defined("INDEX")) die("Not allowed.");
-require_once "./contents.class.php";
+require_once "./classes/contents.class.php";
 
 /**
  * Fetching/inputting comments from/to the database.

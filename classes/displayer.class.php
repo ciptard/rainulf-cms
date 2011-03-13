@@ -129,24 +129,24 @@ class Displayer {
       if(!$title) {
          $next = "";
          $maxPages = $this->contents->returnTotalContents( ) / CONTENTS_PER_PG;
-         $maxPages = round($maxPages);
-         //if($page > 1) {
+         $maxPages = ceil($maxPages);
+         if($page > 1) {
             //echo "[<a id=\"first_page\" class=\"paging\" href=\"?page=1\">First</a>]";
             echo "[<a id=\"prev_page\" class=\"paging\" href=\"?page=" . ($page - 1) . "\">Prev</a>]";
-         //}
-         //else {
+         }
+         else {
             //echo "[First]";
-            //echo "[Prev]";
-         //}
-         echo " <b>Page:</b> <span id='cur_page_num'>{$page}</span> of {$maxPages} ";
-         //if($page < $maxPages) {
+            echo "[<a id=\"prev_page\" class=\"paging\">Prev</a>]";
+         }
+         echo " <b>Page:</b> <span id='cur_page_num'>{$page}</span> of <span id='max_page_num'>{$maxPages}</span> ";
+         if($page < $maxPages) {
             echo "[<a id=\"next_page\" class=\"paging\" href=\"?page=" . $next = $next + ($page + 1) . "\">Next</a>]";
             //echo "[<a id=\"last_page\" class=\"paging\" href=\"?page={$maxPages}\">Last</a>]";
-         //}
-         //else {
-            //echo "[Next]";
+         }
+         else {
+            echo "[<a id=\"next_page\" class=\"paging\">Next</a>]";
             //echo "[Last]";
-         //}
+         }
       //}
       //else {
       //   if($page == 1) {

@@ -13,6 +13,7 @@ require_once 'controller.inc.php';
       <meta name="author" content="<?php echo SITE_AUTHOR; ?>" />
       <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
       <link rel="stylesheet" type="text/css" href="style.css" />
+      <link rel="shortcut icon" href="favicon.ico" />
    </head>
 <body onload="changeQuote( );">
 <div id="header">
@@ -125,7 +126,7 @@ require_once 'controller.inc.php';
 	<!-- end #sidebar -->
 </div>
 <div id="footer">
-	<p>Copyleft 2011, All Wrongs Reserved. Design by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a>.</p>
+	<p>Copyleft (v0.2.3) 2011, All Wrongs Reserved. Design by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a>.</p>
 </div>
 <!-- end #footer -->
 <script src='./jquery-1.5.min.js' type='text/javascript'></script>
