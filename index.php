@@ -15,7 +15,7 @@ require_once 'controller.inc.php';
       <link rel="stylesheet" type="text/css" href="style.css" />
       <link rel="shortcut icon" href="favicon.ico" />
    </head>
-<body onload="changeQuote( );">
+<body>
 <div id="header">
 	<div id="logo">
 		<h1><a href="http://rainulf.ca/">rainulf.ca</a></h1>
