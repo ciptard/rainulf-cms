@@ -129,7 +129,7 @@ require_once 'controller.inc.php';
 	<p>Copyleft (v0.2.3) 2011, All Wrongs Reserved. Design by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a>.</p>
 </div>
 <!-- end #footer -->
-<script src='./jquery-1.5.min.js' type='text/javascript'></script>
-<script src='./script.js' type='text/javascript'></script>
+<script src='./javascript/jquery-1.5.min.js' type='text/javascript'></script>
+<script src='./javascript/script.js' type='text/javascript'></script>
 </body>
 </html>
