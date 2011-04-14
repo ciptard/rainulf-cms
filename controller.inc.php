@@ -105,6 +105,9 @@ if(isset($_GET['search_bar'])) {
 else {
    $indexposts = ($id) ? $contents->searchPost($id, TRUE) : $contents->indexPosts( );
 }
+if(isset($_GET['tags'])) {
+   $indexposts = $contents->searchTags($_GET['tags']);
+}
 // Call RSS feed
 if(isset($_GET['rss'])) {
    // TODO: create RSS.

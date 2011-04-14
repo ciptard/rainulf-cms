@@ -86,39 +86,6 @@ require_once 'controller.inc.php';
                   <li><a href="http://jigsaw.w3.org/css-validator/check/referer" target="_blank">CSS VALID</a></li>
 					</ul>
 				</li>
-				<li>
-               <script type='text/javascript'>
-               <?php echo file_get_contents("http://widgets.twimg.com/j/2/widget.js"); ?>
-               new TWTR.Widget({
-                 version: 2,
-                 type: 'profile',
-                 rpp: 5,
-                 interval: 6000,
-                 width: 250,
-                 height: 300,
-                 theme: {
-                   shell: {
-                     background: '#4e8a30',
-                     color: '#ffffff'
-                   },
-                   tweets: {
-                     background: '#ffffff',
-                     color: '#3d273d',
-                     links: '#43a31a'
-                   }
-                 },
-                 features: {
-                   scrollbar: false,
-                   loop: false,
-                   live: false,
-                   hashtags: true,
-                   timestamp: true,
-                   avatars: false,
-                   behavior: 'all'
-                 }
-               }).render().setUser('rainulf').start();
-               </script>
-				</li>
 			</ul>
 		</div>
 		<div id="sidebar-bgbtm"></div>

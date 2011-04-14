@@ -17,7 +17,7 @@ class ManageContents {
    public function __construct($database) {
       $this->contentDb = $database;
       $this->contentDb->setTable("contents");
-      $this->contentDb->setColumn("id", "Title", "content", "PostD");
+      $this->contentDb->setColumn("id", "Title", "content", "PostD", "Tags");
       $this->contentDb->setOrder("PostD", "desc");
       $this->contentDb->setLimit(0, CONTENTS_PER_PG);
       $result = $this->contentDb->doQry('SELECT * FROM contents');
@@ -104,6 +104,18 @@ class ManageContents {
       //$result = $this->contentDb->whereSearchLike($column, $searchString, $strict);
       //$arr = $this->commonArrayFetch($result);
 
+      return $this->commonStatementFetch($stmt);
+   }
+   
+   // TODO: make multiple tags work
+   public function searchTags($tag = null){
+      if($tag != null){
+         $tag = htmlspecialchars($tag, ENT_QUOTES);
+         $tag = $this->contentDb->real_escape_string($tag);
+      }
+      $stmt = $this->contentDb->generateSelectSearchWithLimit("Tags");
+      $stmt->bind_param('s', $tag);
+      $stmt->execute( );
       return $this->commonStatementFetch($stmt);
    }
    
