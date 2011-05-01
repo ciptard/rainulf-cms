@@ -109,14 +109,16 @@ class ManageContents {
    
    // TODO: make multiple tags work
    public function searchTags($tag = null){
+      $ret = null;
       if($tag != null){
          $tag = htmlspecialchars($tag, ENT_QUOTES);
          $tag = $this->contentDb->real_escape_string($tag);
+         $stmt = $this->contentDb->generateSelectSearchWithLimit("Tags", true);
+         $stmt->bind_param('s', $tag);
+         $stmt->execute( );
+         $ret = $this->commonStatementFetch($stmt);
       }
-      $stmt = $this->contentDb->generateSelectSearchWithLimit("Tags");
-      $stmt->bind_param('s', $tag);
-      $stmt->execute( );
-      return $this->commonStatementFetch($stmt);
+      return $ret;
    }
    
    public function indexPosts( ) {
