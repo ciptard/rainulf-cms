@@ -1,80 +1,95 @@
 <?php
-
-define("INDEX",TRUE);
-require_once 'controller.inc.php';
+define("INDEX", true);
+require_once 'BlogHandler.php';
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!DOCTYPE html>
+
 <html xmlns="http://www.w3.org/1999/xhtml">
-   <head>
-      <title>Rainulf</title>
-      <meta name="description" content="Jose Rainulf Pineda's official website. Software and Web development - C/C++, PHP, mySQL, xHTML and JavaScript languages." />
-      <meta name="keywords" content="jose rainulf pineda, rainulf's website, open source, software development, web development, c++ and c, php, mysql, xhtml, javascript, programming languages, programming tutorials, anime, manga" />
-      <meta name="author" content="Rainulf" />
-      <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-      <link rel="stylesheet" type="text/css" href="style.css" />
-      <script src='script.js' type='text/javascript'></script>
-   </head>
-<body onload="changeQuote( );">
-<div id="header">
-	<div id="logo">
-		<h1><a href="http://rainulf.ca/">rainulf.ca</a></h1>
-		<p id="slogan"></p>
-	</div>
-	<!-- end #logo -->
-	<div id="menu">
-		<ul>
-			<li class="first"><a href="./">Home</a></li>
-			<li><a href="http://zenit.senecac.on.ca/wiki/index.php/User:Rainulf">About Me</a></li>
-			<li><a href="./source_codes/">Source Codes</a></li>
-			<li><a href="#">RSS Feed</a></li>
-			<li><a href="#" onclick="alert('rainulf1@gmail.com');">Contact Me</a></li>
-		</ul>
-	</div>
-	<!-- end #menu -->
-</div>
-<!-- end #header -->
-<div id="page">
-	<div id="content">
-   <!--  CONTENTS!! -->
-   <?php // insert contents ?>
-	</div>
-	<!-- end #content -->
-	<div id="sidebar">
-		<div id="sidebar-bgtop"></div>
-		<div id="sidebar-content">
-			<ul>
-				<li id="search">
-					<h2>Instant Search</h2>
-					<form method="get" action="">
-						<fieldset>
-						<input type="text" id="s" name="s" onfocus="if(this.value==this.defaultValue)this.value=''" 
-				onblur="if(this.value=='')this.value=this.defaultValue" onkeyup="ajaxsearch(this.value)" value="it's magic."  />
-						</fieldset>
-					</form>
-				</li>
-				<li>
-					<h2>Latest Entries</h2>
-					<?php // insert entries ?>
-				</li>
-				<li>
-					<h2>Latest Source Codes</h2>
-					<?php // insert source codes ?>
-				</li>
-				<li>
-					<h2>Links</h2>
-					<?php // insert links ?>
-				</li>
-			</ul>
-		</div>
-		<div id="sidebar-bgbtm"></div>
-	</div>
-	<!-- end #sidebar -->
-</div>
-<!-- end #page -->
-<div id="footer">
-	<p>Copyleft 2011, All Wrongs Reserved. Design by <a href="http://www.freecsstemplates.org/">Free CSS Templates</a>.</p>
-</div>
-<!-- end #footer -->
+<head>
+   <title><?php echo SITE_TITLE; ?></title>
+   <meta name="description" content="<?php echo SITE_DESC; ?>" />
+   <meta name="keywords" content="<?php echo SITE_KEYW; ?>" />
+   <meta name="author" content="<?php echo SITE_AUTHOR; ?>" />
+   <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+   <link rel="stylesheet" type="text/css" href="style.css" />
+   <link rel="shortcut icon" href="favicon.ico" />
+</head>
+
+<body>
+   <div id="container">
+      <div id="header">
+         <h1><a href="."><?php echo SITE_TITLE; ?></a></h1>
+
+         <h2 id="quote">I have no quote to show, you seem to have turned off JavaScript, please turn it on.</h2><br />
+         <hr />
+      </div><!-- end header -->
+
+      <div id="left">
+         <h3>Latest Entries</h3>
+         <ul>
+         <?php foreach($indexLatest as $latest): ?>
+            <?php
+               $urlTitle = urlTitle($latest->getTitle());
+            ?>
+            <li><a href='<?php echo $urlTitle."-".$latest->getID().".html"; ?>'><?php echo $latest->getTitle(); ?></a></li>
+         <?php endforeach; ?>
+         </ul>
+         <h3>Tags</h3>
+         <ul>
+            <li></li>
+         </ul>
+         <h3>Links</h3>
+         <ul>
+            <li><a href="http://zenit.senecac.on.ca/wiki/index.php/User:Rainulf">Rainulf@CDOT</a></li>
+            <li><a href="http://twitter.com/rainulf">Rainulf@Twitter</a></li>
+            <li><a href="http://bit.ly/rainulfirc">Rainulf@IRC Freenode</a></li>
+            <li><a href="http://helloyounha.com/xe/">Hello!Younha!</a></li>
+            <li><a href="http://www.animenewsnetwork.com/">Anime News Network</a></li>
+            <li><a href="http://myanimelist.net/">MyAnimeList</a></li>
+            <li><a href="http://randomc.net/">Random Curiosity</a></li>
+            <li><a href="https://my.senecacollege.ca/">Seneca BlackBoard</a></li>
+            <li><a href="https://scs.senecac.on.ca/">Seneca CS</a></li>
+            <li><a href="https://learn.senecac.on.ca/">Seneca Webmail</a></li>
+         </ul>
+      </div><!-- end left division -->
+      <div id="main">
+      
+      
+      <?php foreach($indexPosts as $post): ?>
+         <?php 
+            $date = betterDatetime($post->getDate());
+            $urlTitle = urlTitle($post->getTitle());
+         ?>
+         <a id='<?php echo $post->getID(); ?>'></a>
+		   <div class='post'>
+			   <h1 class='title'><a href="javascript:unhide('id_<?php echo $post->getID(); ?>');"><?php echo $post->getTitle(); ?></a></h1>
+			   <div id='id_<?php echo $post->getID(); ?>' class='postContents'>
+			      <p class='byline'><small>Posted on <?php echo $date; ?></small></p>
+			      <div class='entry'>
+                  <?php echo $post->getContent(); ?>
+			      </div>
+               <div class="postComments"></div>
+			      <div class="meta">
+				      <p class="links"><a href='#'>Back to top</a> &nbsp;&bull;&nbsp; <a class="permalink" href='<?php echo $urlTitle."-".$post->getID().".html"; ?>'>Permalink</a></p>
+			      </div>
+			   </div>
+		   </div>
+      <?php endforeach; ?>
+      
+      
+      </div>
+      <div id="footer">
+         <hr />
+         <p class="left">| <a href=
+             "http://jigsaw.w3.org/css-validator/">CSS</a> | <a href=
+             "http://validator.w3.org/check?uri=referer">HTML5</a>
+         |</p>
+         <p class="right">All Lefts Reserved. 2011.</p>
+      </div><!-- end footer -->
+   </div><!-- end container -->
+   <script src='./_js/jquery-1.5.2.min.js' type='text/javascript'></script>
+   <script src='./_js/script.js' type='text/javascript'></script>
 </body>
 </html>
