@@ -1,0 +1,6 @@
+Options +FollowSymLinks
+RewriteEngine on
+
+RewriteRule (.*)-(.*)\.html ?id=$2
+RewriteRule (.*)tag\.html ?tags=$1
+RewriteRule post.php(.*) $1
