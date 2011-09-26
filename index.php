@@ -55,16 +55,17 @@ require_once './controller.inc.php';
          
          <h3>Links</h3>
          <ul>
-            <li><a href="http://zenit.senecac.on.ca/wiki/index.php/User:Rainulf">Rainulf@CDOT</a></li>
-            <li><a href="http://twitter.com/rainulf">Rainulf@Twitter</a></li>
-            <li><a href="http://bit.ly/rainulfirc">Rainulf@IRC Freenode</a></li>
-            <li><a href="http://helloyounha.com/xe/">Hello!Younha!</a></li>
-            <li><a href="http://www.animenewsnetwork.com/">Anime News Network</a></li>
-            <li><a href="http://myanimelist.net/">MyAnimeList</a></li>
-            <li><a href="http://randomc.net/">Random Curiosity</a></li>
-            <li><a href="https://my.senecacollege.ca/">Seneca BlackBoard</a></li>
-            <li><a href="https://scs.senecac.on.ca/">Seneca CS</a></li>
-            <li><a href="https://learn.senecac.on.ca/">Seneca Webmail</a></li>
+            <li><a href="http://zenit.senecac.on.ca/wiki/index.php/User:Rainulf" target="_blank">About Rainulf</a></li>
+            <li><a href="http://twitter.com/rainulf" target="_blank">Rainulf@Twitter</a></li>
+            <li><a href="https://github.com/rainulf" target="_blank">Rainulf@github</a></li>
+            <li><a href="http://bit.ly/rainulfirc" target="_blank">Rainulf@IRC Freenode</a></li>
+            <li><a href="http://helloyounha.com/xe/" target="_blank">Hello!Younha!</a></li>
+            <li><a href="http://www.animenewsnetwork.com/" target="_blank">Anime News Network</a></li>
+            <li><a href="http://myanimelist.net/" target="_blank">MyAnimeList</a></li>
+            <li><a href="http://randomc.net/" target="_blank">Random Curiosity</a></li>
+            <li><a href="https://my.senecacollege.ca/" target="_blank">Seneca BlackBoard</a></li>
+            <li><a href="https://scs.senecac.on.ca/" target="_blank">Seneca CS</a></li>
+            <li><a href="https://learn.senecac.on.ca/" target="_blank">Seneca Webmail</a></li>
          </ul>
          
          
