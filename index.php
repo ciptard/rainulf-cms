@@ -12,8 +12,8 @@ require_once './controller.inc.php';
 
 <head>
    <title><?php echo $indexTitle; ?></title>
-   <meta name="description" content="<?php echo SITE_DESC; ?>" />
-   <meta name="keywords" content="<?php echo SITE_KEYW; ?>" />
+   <meta name="description" content="<?php echo $indexDesc; ?>" />
+   <meta name="keywords" content="<?php echo $indexKeyw; ?>" />
    <meta name="author" content="<?php echo SITE_AUTHOR; ?>" />
    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
    <link rel="stylesheet" type="text/css" href="style.css" />
@@ -38,7 +38,7 @@ require_once './controller.inc.php';
          <h3>Latest Entries</h3>
          <ul>
          <?php foreach($indexEntries as $one): ?>
-            <li><a href='<?php echo titleToHTMLExt($one->id, $one->Title); ?>'><?php echo $one->Title; ?></a></li>
+            <li><a href='<?php echo Helper::titleToHTMLExt($one->id, $one->Title); ?>'><?php echo $one->Title; ?></a></li>
          <?php endforeach; ?>
          </ul>
          
@@ -82,7 +82,7 @@ require_once './controller.inc.php';
 			      </div>
                <div class="postComments"></div>
 			      <div class="meta">
-				      <p class="links"><a href='#'>Back to top</a> &nbsp;&bull;&nbsp; <a class="permalink" href='<?php echo titleToHTMLExt($one->id, $one->Title); ?>'>Permalink</a></p>
+				      <p class="links"><a href='#'>Back to top</a> &nbsp;&bull;&nbsp; <a class="permalink" href='<?php echo Helper::titleToHTMLExt($one->id, $one->Title); ?>'>Permalink</a></p>
 			      </div>
                
 			   </div>

@@ -8,7 +8,7 @@
 if(!defined("INDEX")) die("Not allowed.");
 
 error_reporting(-1);
-session_start( );
+session_start();
 date_default_timezone_set('America/Toronto');
 require_once './conf.php';
 require_once './helpers.php';
@@ -16,8 +16,10 @@ require_once './_classes/DatabaseConnection.php';
 require_once './_classes/ContentsModel.php';
 require_once './_classes/ContentsModelMapper.php';
 
-fixMagicQuotes();
+Helper::fixMagicQuotes();
 $indexTitle = SITE_TITLE;
+$indexDesc = SITE_DESC;
+$indexKeyw = SITE_KEYW;
 
 /**
  * Mapper creation and REQUEST grabbing
@@ -32,6 +34,8 @@ if(isset($_GET['tags'])){
 else if(isset($_GET['id'])){
    $indexPosts = $mapper->Fetch('id', intval($_GET['id']), true);
    $indexTitle = $indexPosts[0]->Title . " - " . $indexTitle;
+   $indexDesc = trim(strip_tags(substr($indexPosts[0]->content, 0, 150))) . '...';
+   $indexKeyw = Helper::generateMetaKeywords($indexPosts[0]->content);
 }
 else {
    // TODO: Paging
@@ -51,7 +55,7 @@ foreach($fetchedTags as $tag){
       $arrTags[] = $tag->Tags;
    }
 }
-$indexTags = tagsToHTMLExt($arrTags);
+$indexTags = Helper::tagsToHTMLExt($arrTags);
 
 
 
