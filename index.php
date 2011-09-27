@@ -33,9 +33,11 @@ if(isset($_GET['tags'])){
 }
 else if(isset($_GET['id'])){
    $indexPosts = $mapper->Fetch('id', intval($_GET['id']), true);
-   $indexTitle = $indexPosts[0]->Title . " - " . $indexTitle;
-   $indexDesc = trim(strip_tags(substr($indexPosts[0]->content, 0, 150))) . '...';
-   $indexKeyw = Helper::generateMetaKeywords($indexPosts[0]->content);
+   if(count($indexPosts) > 0 || !empty($indexPosts)){
+      $indexTitle = $indexPosts[0]->Title . " - " . $indexTitle;
+      $indexDesc = trim(strip_tags(substr($indexPosts[0]->content, 0, 150))) . '...';
+      $indexKeyw = Helper::generateMetaKeywords($indexPosts[0]->content);
+   }
 }
 else {
    // TODO: Paging
