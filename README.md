@@ -13,9 +13,9 @@ it a useful learning/reference material.
 About Rainulf
 -------------
 My name is Jose Rainulf Pineda. I am a Seneca College student, currently studying software development. I do 
-web development (XHTML/HTML5, PHP, mySQL, JavaScript) or C/C++ on my free time. Most of the time, I like to watch 
-anime or read manga. So if you are an otaku like me, feel free to contact and we shall have a nerdy conversation. For 
-any job offers, please contact me.
+web development (XHTML/HTML5, PHP, mySQL, JavaScript) or C/C++ on my free time. I have quite some experience in Java, 
+ASP.NET/C#, Perl, CGI and Python . Most of the time, I like to watch anime or read manga. So if you are an otaku like me, 
+feel free to contact and we shall have a nerdy conversation. Please contact me for any job offers
 
 * Email: rainulf@rainulf.ca (preferred)
 * Gmail: rainulf1@gmail.com
