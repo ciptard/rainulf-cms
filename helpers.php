@@ -91,6 +91,12 @@ class Helper{
       }
       return $ret;
    }
+   public static function formatDate($datetime){
+      $datetime = explode(" ", $datetime);
+      $date = explode("-", $datetime[0]);
+      $time = explode(":", $datetime[1]);
+      return date('l jS \of F Y h:i:s A', mktime($time[0], $time[1], $time[2], $date[1], $date[2], $date[0]));
+   }
    // TODO: finish paging
    public static function paging($currPage, $maxPages){
       

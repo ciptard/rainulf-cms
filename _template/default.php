@@ -74,7 +74,7 @@ if(!defined("INDEX")) die("Not allowed.");
          <div class='post'>
             <h1 class='title'><a href="javascript:unhide('id_<?php echo $one->id; ?>');"><?php echo $one->Title; ?></a></h1>
             <div id='id_<?php echo $one->id; ?>' class='postContents'>
-               <p class='byline'><small>Posted on <?php echo $one->PostD; ?></small></p>
+               <p class='byline'><small>Posted on <?php echo Helper::formatDate($one->PostD); ?></small></p>
                <div class='entry'>
                <?php echo $one->content; ?>
                </div>
