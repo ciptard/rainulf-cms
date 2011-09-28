@@ -27,12 +27,13 @@ $indexKeyw = SITE_KEYW;
 $mapper = new ContentsModelMapper();
 $mapper->SetOrder('PostD', 'DESC');
 
-if(isset($_GET['tags'])){
-   $indexPosts = $mapper->Fetch('Tags', '%'.strip_tags(htmlspecialchars($_GET['tags'])).'%');
-   $indexTitle = "Tag: " . strip_tags(htmlspecialchars($_GET['tags'])) . " - " . $indexTitle;
+$requests = Helper::getRequests();
+if(array_key_exists('tags', $requests)){
+   $indexPosts = $mapper->Fetch('Tags', '%'.$requests['tags'].'%');
+   $indexTitle = "Tag: " . $requests['tags'] . " - " . $indexTitle;   
 }
-else if(isset($_GET['id'])){
-   $indexPosts = $mapper->Fetch('id', intval($_GET['id']), true);
+else if(array_key_exists('id', $requests)){
+   $indexPosts = $mapper->Fetch('id', intval($requests['id']), true);
    if(count($indexPosts) > 0 || !empty($indexPosts)){
       $indexTitle = $indexPosts[0]->Title . " - " . $indexTitle;
       $indexDesc = trim(strip_tags(substr($indexPosts[0]->content, 0, 150))) . '...';
