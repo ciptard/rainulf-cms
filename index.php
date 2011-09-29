@@ -36,8 +36,8 @@ else if(array_key_exists('id', $requests)){
    $indexPosts = $mapper->Fetch('id', intval($requests['id']), true);
    if(count($indexPosts) > 0 || !empty($indexPosts)){
       $indexTitle = $indexPosts[0]->Title . " - " . $indexTitle;
-      $indexDesc = trim(strip_tags(substr($indexPosts[0]->content, 0, 150))) . '...';
-      $indexKeyw = Helper::generateMetaKeywords($indexPosts[0]->content);
+      $indexDesc = htmlspecialchars(trim(strip_tags(substr($indexPosts[0]->content, 0, 150))), ENT_QUOTES) . '...';
+      $indexKeyw = htmlspecialchars(Helper::generateMetaKeywords($indexPosts[0]->content), ENT_QUOTES);
    }
 }
 else {
