@@ -112,3 +112,7 @@ a:hover {
 	font-size:100%;
 	margin-top:5px;
 }
+.postComments {
+    float: left;
+    width: 100%;
+}
