@@ -28,10 +28,12 @@ switch($errorId){
    case 400: 
       $errorTitle = "Bad Request"; 
       $errorHeader = "Bad Request";
+      $errorImg = "./_images/400.png";
       break;
    case 403: 
       $errorTitle = "Forbidden"; 
       $errorHeader = "Forbidden";
+      $errorImg = "./_images/447-oh-u-mad.jpg";
       break;
    case 404: 
       $errorTitle = "Page Not Found"; 
@@ -42,10 +44,12 @@ switch($errorId){
    case 500: 
       $errorTitle = "Internal Server Error"; 
       $errorHeader = "Internal Server Error";
+      $errorImg = "./_images/447-oh-u-mad.jpg";
       break;
    default: 
       $errorTitle = "Unknown Error";
       $errorHeader = "Unknown Error";
+      $errorImg = "./_images/447-oh-u-mad.jpg";
 }
 
 $indexTitle = $errorTitle . " - " . $indexTitle;
