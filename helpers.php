@@ -101,6 +101,8 @@ class Helper{
       $requests = $_REQUEST;
       $cleanRequests = array();
       while ($curr = current($requests)) {
+         $cleanVal = strip_tags($curr);
+         $cleanVal = htmlspecialchars($cleanVal, ENT_QUOTES);
          $cleanRequests[key($requests)] = $curr;
          next($requests);
       }
