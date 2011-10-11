@@ -68,6 +68,9 @@ h3 {
 #left ul li{
    list-style-type: circle;
 }
+#left ul#certs li{
+   list-style-type: none;
+}
 #main {
 	margin					: 5px 5px 5px 260px;
 	padding					: 15px;
