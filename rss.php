@@ -1,5 +1,7 @@
 <?php
 define('INDEX', true);
+
+error_reporting(-1);
 date_default_timezone_set('America/Toronto');
 require_once './conf.php';
 require_once './helpers.php';

@@ -66,6 +66,12 @@ if(!defined("INDEX")) die("Not allowed.");
          </ul>
          
          
+         <h3>Certifications</h3>
+         <ul id="certs">
+            <li><a href="http://www.refsnesdata.no/certification/w3certified.asp?id=3055467"><img src="./_images/w3cert.png" border="0" /></a></li>
+         </ul>
+         
+         
       </div><!-- end left division -->
 
       <div id="main">

@@ -41,7 +41,6 @@ else if(array_key_exists('id', $requests)){
    }
 }
 else {
-   // TODO: Paging
    $indexPosts = $mapper->FetchAll(0, CONTENTS_PER_PG);
 }
                

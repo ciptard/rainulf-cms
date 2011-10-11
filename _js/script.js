@@ -3,6 +3,7 @@
  * Date Started: Oct 31, 2010 *
  * Last Updated: Mar 13, 2011 *
  ******************************/
+
 // GLOBAL VARIABLES
 //
 // Used for auto paging
