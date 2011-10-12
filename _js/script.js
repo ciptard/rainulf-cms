@@ -8,8 +8,9 @@
 //
 // Used for auto paging
 var nextOffset = 7;
-// Lock
-var isLocked = false;
+// Locks
+var unhideLock = false;
+var scrollLock = false;
 
 // FUNCTIONS
 //
@@ -20,16 +21,18 @@ function generateRandom(numberOfQuotes) {
 
 
 function unhide(divID) {
-   isLocked = true;
-   $(document).ready(function(){
-      $(".postContents").slideUp();
-      $(".postContents .postComments").empty();
-      $("#" + divID).slideToggle("slow", function(){ window.location.hash=divID; isLocked = false;}); 
-      
-      var permalink = "http://rainulf.ca/" + $("#" + divID + " .meta .links .permalink").attr("href");
-      var disqusHTML = generateDisqusHTML(permalink);
-      $("#" + divID + " .postComments").html(disqusHTML);
-   });
+   if(!unhideLock){
+      unhideLock = true;
+      $(document).ready(function(){
+         $(".postContents").slideUp();
+         $(".postContents .postComments").empty();
+         $("#" + divID).slideToggle("slow", function(){ window.location.hash=divID; unhideLock = false;}); 
+         
+         var permalink = "http://rainulf.ca/" + $("#" + divID + " .meta .links .permalink").attr("href");
+         var disqusHTML = generateDisqusHTML(permalink);
+         $("#" + divID + " .postComments").html(disqusHTML);
+      });
+   }
 }
 
 function generateDisqusHTML(url){
@@ -66,7 +69,7 @@ $(document).ready(function(){
    
    // Content load at bottom (paging replacement)
    $(window).scroll(function(){
-      if($(window).scrollTop() == $(document).height() - $(window).height() && !isLocked){
+      if($(window).scrollTop() == $(document).height() - $(window).height() && !scrollLock){
          $.get('./getcontent.php', { offset: nextOffset }, function(data) {
             $("#main").append(data);
             $(".appended").hide().removeClass("appended");
