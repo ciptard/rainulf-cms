@@ -20,6 +20,7 @@ Helper::fixMagicQuotes();
 $indexTitle = SITE_TITLE;
 $indexDesc = SITE_DESC;
 $indexKeyw = SITE_KEYW;
+$jsOut = '';
 
 /**
  * Mapper creation and REQUEST grabbing
@@ -31,6 +32,7 @@ $requests = Helper::getRequests();
 if(array_key_exists('tags', $requests)){
    $indexPosts = $mapper->Fetch('Tags', '%'.$requests['tags'].'%');
    $indexTitle = "Tag: " . $requests['tags'] . " - " . $indexTitle;   
+   $jsOut = 'isLocked = true;';
 }
 else if(array_key_exists('id', $requests)){
    $indexPosts = $mapper->Fetch('id', intval($requests['id']), true);
@@ -39,6 +41,7 @@ else if(array_key_exists('id', $requests)){
       $indexDesc = htmlspecialchars(trim(strip_tags(substr($indexPosts[0]->content, 0, 150))), ENT_QUOTES) . '...';
       $indexKeyw = htmlspecialchars(Helper::generateMetaKeywords($indexPosts[0]->content), ENT_QUOTES);
    }
+   $jsOut = 'isLocked = true;';
 }
 else {
    $indexPosts = $mapper->FetchAll(0, CONTENTS_PER_PG);

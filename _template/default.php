@@ -109,6 +109,7 @@ if(!defined("INDEX")) die("Not allowed.");
    
    <script src='./_js/jquery-1.5.2.min.js' type='text/javascript'></script>
    <script src='./_js/script.js' type='text/javascript'></script>
+   <script type='text/javascript'><?php echo $jsOut; ?></script>
    
    
 </body>
