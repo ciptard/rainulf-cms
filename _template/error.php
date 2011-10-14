@@ -53,6 +53,7 @@ if(!defined("INDEX")) die("Not allowed.");
          <h3>Links</h3>
          <ul>
             <li><a href="http://zenit.senecac.on.ca/wiki/index.php/User:Rainulf" target="_blank">About Rainulf</a></li>
+            <li><a href="https://joindiaspora.com/u/rainulf" target="_blank">Rainulf@Diaspora*</a></li>
             <li><a href="http://twitter.com/rainulf" target="_blank">Rainulf@Twitter</a></li>
             <li><a href="https://github.com/rainulf" target="_blank">Rainulf@github</a></li>
             <li><a href="http://bit.ly/rainulfirc" target="_blank">Rainulf@IRC Freenode</a></li>
