@@ -12,6 +12,7 @@ require_once './_classes/ContentsModelMapper.php';
 
 $mapper = new ContentsModelMapper();
 $mapper->SetOrder('PostD', 'DESC');
+
 $requests = Helper::getRequests();
 if(array_key_exists('tags', $requests)){
    $indexPosts = $mapper->Fetch('Tags', '%'.$requests['tags'].'%');
@@ -20,7 +21,6 @@ else if(array_key_exists('id', $requests)){
    $indexPosts = $mapper->Fetch('id', intval($requests['id']), true);
 }
 else {
-   // TODO: Paging
    $indexPosts = $mapper->FetchAll(0, CONTENTS_PER_PG);
 }
 

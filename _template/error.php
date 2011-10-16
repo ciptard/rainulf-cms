@@ -50,40 +50,6 @@ if(!defined("INDEX")) die("Not allowed.");
          </ul>
          
          
-         <h3>Twitter Updates</h3>
-         <script src="http://widgets.twimg.com/j/2/widget.js"></script>
-         <script>
-         new TWTR.Widget({
-           version: 2,
-           type: 'profile',
-           rpp: 7,
-           interval: 30000,
-           width: 'auto',
-           height: 300,
-           theme: {
-             shell: {
-               background: '#cc0000',
-               color: '#ffffff'
-             },
-             tweets: {
-               background: '#ffffff',
-               color: '#000000',
-               links: '#cc0000'
-             }
-           },
-           features: {
-             scrollbar: false,
-             loop: false,
-             live: false,
-             hashtags: true,
-             timestamp: true,
-             avatars: false,
-             behavior: 'all'
-           }
-         }).render().setUser('rainulf').start();
-         </script>
-         
-         
          <h3>Links</h3>
          <ul>
             <li><a href="http://zenit.senecac.on.ca/wiki/index.php/User:Rainulf" target="_blank">About Rainulf</a></li>
@@ -99,7 +65,7 @@ if(!defined("INDEX")) die("Not allowed.");
             <li><a href="https://scs.senecac.on.ca/" target="_blank">Seneca CS</a></li>
             <li><a href="https://learn.senecac.on.ca/" target="_blank">Seneca Webmail</a></li>
          </ul>
-         
+              
          
          <h3>Certifications</h3>
          <ul id="certs">

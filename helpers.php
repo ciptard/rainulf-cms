@@ -75,7 +75,7 @@ class Helper{
             $metaKeywords[] = $one;
             $i++;
             if($i >= 30){
-               break;;
+               break;
             }
          }
       }

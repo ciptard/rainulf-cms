@@ -42,19 +42,16 @@ else if(array_key_exists('id', $requests)){
       $indexKeyw = htmlspecialchars(Helper::generateMetaKeywords($indexPosts[0]->content), ENT_QUOTES);
    }
    $jsOut = 'scrollLock = true;';
-   $jsOut .= 'unhideLock = true';
+   $jsOut .= 'unhideLock = true;';
 }
 else {
    $indexPosts = $mapper->FetchAll(0, CONTENTS_PER_PG);
 }
+
                
-if(!$mapper->IsEmpty()){
-   $mapper->EmptyModelList();
-}
+!$mapper->IsEmpty() && $mapper->EmptyModelList();
 $indexEntries = $mapper->FetchColumn('id, Title', true);
-if(!$mapper->IsEmpty()){
-   $mapper->EmptyModelList();
-}
+!$mapper->IsEmpty() && $mapper->EmptyModelList();
 $fetchedTags = $mapper->FetchColumn('Tags');
 foreach($fetchedTags as $tag){
    if(!empty($tag->Tags)){
