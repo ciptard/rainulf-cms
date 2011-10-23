@@ -22,7 +22,6 @@ $offset = intval($requests['offset']);
 $indexPosts = $mapper->FetchAll($offset, CONTENTS_PER_PG);
 
 ?>
-
       <?php foreach($indexPosts as $one): ?>
          <a id='<?php echo $one->id; ?>'></a>
          <div class='post'>

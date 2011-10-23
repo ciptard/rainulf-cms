@@ -70,8 +70,12 @@ $(document).ready(function(){
       if($(window).scrollTop() == $(document).height() - $(window).height() && !scrollLock){
          nextOffset += 7;
          $.get('./getcontent.php', { offset: nextOffset }, function(data) {
-            $("#main").append(data);
-            $(".appended").hide().removeClass("appended");
+            if(data.length > 10){
+               $("#main").append(data);
+               $(".appended").hide().removeClass("appended");
+            } else {
+               scrollLock = true;
+            }
          });
       }
    }); 
