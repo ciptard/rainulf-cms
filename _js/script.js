@@ -6,8 +6,6 @@
 
 // GLOBAL VARIABLES
 //
-// Used for auto paging
-var nextOffset = 7;
 // Locks
 var unhideLock = false;
 var scrollLock = false;
@@ -70,10 +68,10 @@ $(document).ready(function(){
    // Content load at bottom (paging replacement)
    $(window).scroll(function(){
       if($(window).scrollTop() == $(document).height() - $(window).height() && !scrollLock){
+         nextOffset += 7;
          $.get('./getcontent.php', { offset: nextOffset }, function(data) {
             $("#main").append(data);
             $(".appended").hide().removeClass("appended");
-            nextOffset += 7;
          });
       }
    }); 
