@@ -33,7 +33,7 @@
             <li><a href="http://myanimelist.net/" target="_blank">MyAnimeList</a></li>
             <li><a href="http://randomc.net/" target="_blank">Random Curiosity</a></li>
             <li><a href="https://my.senecacollege.ca/" target="_blank">Seneca BlackBoard</a></li>
-            <li><a href="https://scs.senecac.on.ca/" target="_blank">Seneca CS</a></li>
+            <li><a href="https://scs.senecac.on.ca/" target="_blank">Seneca ICT</a></li>
             <li><a href="https://learn.senecac.on.ca/" target="_blank">Seneca Webmail</a></li>
          </ul>
          
