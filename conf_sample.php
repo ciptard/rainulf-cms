@@ -26,9 +26,4 @@ define('DB_DATABASE', '');
 define('DB_HOST', '');
 define('DB_CHARSET', '');
 
-/**
- * Misc
- */
-define('SELF_PATH', dirname(__FILE__) . DIRECTORY_SEPARATOR);
-
 ?>

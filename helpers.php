@@ -108,5 +108,8 @@ class Helper{
       }
       return $cleanRequests;
    }
+   public static function getPath($fileConst){
+      return dirname($fileConst) . DIRECTORY_SEPARATOR;
+   }
 }
 ?>

@@ -2,8 +2,8 @@
 if(!defined("INDEX")) die("Not allowed.");
 ?>
 
-<?php include SELF_PATH . 'head.php'; ?>
-<?php include SELF_PATH . 'leftdiv.php'; ?> 
+<?php include Helper::getPath(__FILE__) . 'head.php';?>
+<?php include Helper::getPath(__FILE__) . 'leftdiv.php'; ?> 
 
 
 
@@ -27,4 +27,4 @@ if(!defined("INDEX")) die("Not allowed.");
       <?php endforeach; ?>
       </div>
 
-<?php include SELF_PATH . 'foot.php'; ?>
+<?php include Helper::getPath(__FILE__) . 'foot.php'; ?>
