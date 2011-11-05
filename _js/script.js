@@ -68,8 +68,8 @@ $(document).ready(function(){
    // Content load at bottom (paging replacement)
    $(window).scroll(function(){
       if($(window).scrollTop() == $(document).height() - $(window).height() && !scrollLock){
-         nextOffset += 7;
-         $.get('./getcontent.php', { offset: nextOffset }, function(data) {
+         currentOffset += nextOffset;
+         $.get('./getcontent.php', { offset: currentOffset }, function(data) {
             if(data.length > 10){
                $("#main").append(data);
                $(".appended").hide().removeClass("appended");

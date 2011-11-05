@@ -20,8 +20,11 @@ Helper::fixMagicQuotes();
 $indexTitle = SITE_TITLE;
 $indexDesc = SITE_DESC;
 $indexKeyw = SITE_KEYW;
-$jsOut = '';
-$jsOut .= 'var nextOffset = ' . CONTENTS_PER_PG . ';';
+$contentsPerPage = CONTENTS_PER_PG;
+$jsOut = <<<END
+var nextOffset = {$contentsPerPage};
+var currentOffset = {$contentsPerPage};
+END;
 
 /**
  * Mapper creation and REQUEST grabbing
