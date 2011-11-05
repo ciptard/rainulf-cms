@@ -53,13 +53,11 @@ else {
 }
 
                
-!$mapper->IsEmpty() && $mapper->EmptyModelList();
 $indexEntries = $mapper->FetchColumn('id, Title', true);
-!$mapper->IsEmpty() && $mapper->EmptyModelList();
 $fetchedTags = $mapper->FetchColumn('Tags');
-foreach($fetchedTags as $tag){
-   if(!empty($tag->Tags)){
-      $arrTags[] = $tag->Tags;
+if(!empty($fetchedTags)){
+   foreach($fetchedTags as $tag){
+      !empty($tag->Tags) && $arrTags[] = $tag->Tags;
    }
 }
 $indexTags = Helper::tagsToHTMLExt($arrTags);

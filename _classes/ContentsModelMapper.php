@@ -7,10 +7,19 @@
    class ContentsModelMapper{
       protected $modelList;
       protected $dbConnection;
+      protected $mode;
 
       public $TableName = "contents";
 
       private function _IterateItems($items){
+         switch($this->mode){
+            case "replace":
+               !$this->IsEmpty() && $this->EmptyModelList();
+               break;
+            case "append":
+               break;
+            default:
+         }
          foreach($items as $item){
             $id = isset($item['id']) ? $item['id'] : "";
             $Title = isset($item['Title']) ? $item['Title'] : "";
@@ -21,12 +30,13 @@
          }
          return (count($items) == count($this->modelList));
       }
-      public function __construct($modelList = array()){
+      public function __construct($modelList = array(), $mode = "replace"){
          $this->modelList = $modelList;
          $this->dbConnection = new DatabaseConnection();
          $this->dbConnection->setTable($this->TableName);
          $this->dbConnection->setColumn("id","Title","content","PostD","Tags");
          $this->dbConnection->setLimit(0, CONTENTS_PER_PG);
+         $this->mode = $mode;
       }
       public function FetchAll($x = null, $y = null){
          $items = array();

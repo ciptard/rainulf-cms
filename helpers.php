@@ -111,5 +111,10 @@ class Helper{
    public static function getPath($fileConst){
       return dirname($fileConst) . DIRECTORY_SEPARATOR;
    }
+   public static function debug($var, $func = "var_dump"){
+      echo "<pre>\n";
+      $func($var);
+      echo "</pre>\n";
+   }
 }
 ?>
