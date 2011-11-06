@@ -1,8 +1,8 @@
-/******************************
- * Author      : Rainulf      *
- * Date Started: Oct 31, 2010 *
- * Last Updated: Mar 13, 2011 *
- ******************************/
+/************************************
+ * Author      : Rainulf            *
+ * Website     : rainulf.ca         *
+ * Email       : rainulf@rainulf.ca *
+ ************************************/
 
 // GLOBAL VARIABLES
 //

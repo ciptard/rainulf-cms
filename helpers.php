@@ -1,9 +1,9 @@
 <?php
-/******************************
- * Author      : Rainulf      *
- * Date Started: Sep 22, 2011 *
- * Last Updated: Sep 22, 2011 *
- ******************************/
+/************************************
+ * Author      : Rainulf            *
+ * Website     : rainulf.ca         *
+ * Email       : rainulf@rainulf.ca *
+ ************************************/
 
 class Helper{
    public static function titleToHTMLExt($id, $title){

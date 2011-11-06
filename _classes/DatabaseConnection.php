@@ -1,9 +1,9 @@
 <?php
-/******************************
- * Author      : Rainulf      *
- * Date Started: Mar 10, 2011 *
- * Last Updated: Sep 11, 2011 *
- ******************************/
+/************************************
+ * Author      : Rainulf            *
+ * Website     : rainulf.ca         *
+ * Email       : rainulf@rainulf.ca *
+ ************************************/
 
 if(!defined("INDEX")) die("Not allowed.");
 

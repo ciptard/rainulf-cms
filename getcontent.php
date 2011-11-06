@@ -1,4 +1,10 @@
 <?php
+/************************************
+ * Author      : Rainulf            *
+ * Website     : rainulf.ca         *
+ * Email       : rainulf@rainulf.ca *
+ ************************************/
+ 
 define("INDEX", true);
 
 error_reporting(-1);

@@ -1,9 +1,9 @@
 <?php
-/******************************
- * Author      : Rainulf      *
- * Date Started: Oct 05, 2011 *
- * Last Updated: Oct 05, 2011 *
- ******************************/
+/************************************
+ * Author      : Rainulf            *
+ * Website     : rainulf.ca         *
+ * Email       : rainulf@rainulf.ca *
+ ************************************/
 
 define("INDEX", true);
 
