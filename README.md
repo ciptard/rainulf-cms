@@ -18,7 +18,6 @@ ASP.NET/C#, Perl, CGI and Python . Most of the time, I like to watch anime or re
 feel free to contact and we shall have a nerdy conversation. Please contact me for any job offers
 
 * Email: rainulf@rainulf.ca (preferred)
-* Gmail: rainulf1@gmail.com
 * Twitter: https://twitter.com/rainulf
 * Website: http://rainulf.ca/
 * LinkedIn: http://www.linkedin.com/in/rainulf
