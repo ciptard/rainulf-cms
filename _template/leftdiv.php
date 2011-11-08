@@ -27,6 +27,7 @@
             <li><a href="https://github.com/rainulf" target="_blank">Rainulf@github</a></li>
             <li><a href="http://bit.ly/rainulfirc" target="_blank">Rainulf@IRC Freenode</a></li>
             <li><a href="http://www.kiva.org/lender/rainulf" target="_blank">Rainulf@Kiva</a></li>
+            <li><a href="http://www.last.fm/user/rainulf1" target="_blank">Rainulf@last.fm</a></li>
             <li><a href="http://kiva.org/invitedby/rainulf" target="_blank">Join Kiva</a></li>
             <li><a href="http://helloyounha.com/xe/" target="_blank">Hello!Younha!</a></li>
             <li><a href="http://www.animenewsnetwork.com/" target="_blank">Anime News Network</a></li>
