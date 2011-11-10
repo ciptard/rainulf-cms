@@ -4,6 +4,8 @@
  * Website     : rainulf.ca         *
  * Email       : rainulf@rainulf.ca *
  ************************************/
+
+if(!defined("INDEX")) die("Not allowed.");
     
 final class ContentsModel{
    public $id;

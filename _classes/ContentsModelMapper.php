@@ -5,6 +5,8 @@
  * Email       : rainulf@rainulf.ca *
  ************************************/
     
+if(!defined("INDEX")) die("Not allowed.");
+
 class ContentsModelMapper{
    protected $modelList;
    protected $dbConnection;
@@ -33,7 +35,7 @@ class ContentsModelMapper{
    }
    public function __construct($modelList = array(), $mode = "replace"){
       $this->modelList = $modelList;
-      $this->dbConnection = new DatabaseConnection();
+      $this->dbConnection = new MySQLConnection();
       $this->dbConnection->setTable($this->TableName);
       $this->dbConnection->setColumn("id","Title","content","PostD","Tags");
       $this->dbConnection->setLimit(0, CONTENTS_PER_PG);

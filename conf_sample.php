@@ -6,6 +6,10 @@
  ************************************/
 
 if(!defined("INDEX")) die("Not allowed.");
+
+error_reporting(-1);
+date_default_timezone_set('America/Toronto');
+
 /**
  * Website info (usually for meta tags)
  */
