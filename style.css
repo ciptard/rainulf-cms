@@ -8,7 +8,6 @@ body {
 	font-family:arial, verdana, helvetica, sans-serif;
 	font-size:12px;
 	cursor:default;
-	background-color:#FFFFFF
 }
 * {
 	margin: 0px;
@@ -124,4 +123,11 @@ a:hover {
 .postComments {
     float: left;
     width: 100%;
+}
+#floatingbackground {
+   position:fixed;
+   top:50%;
+   right:5px;
+   opacity:0.3;
+   filter:alpha(opacity=30); /* For IE8 and earlier */
 }
