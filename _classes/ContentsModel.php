@@ -7,7 +7,7 @@
 
 if(!defined("INDEX")) die("Not allowed.");
     
-final class ContentsModel{
+final class ContentsModel extends Model{
    public $id;
    public $Title;
    public $content;
