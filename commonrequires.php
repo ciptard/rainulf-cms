@@ -7,12 +7,15 @@
 
 if(!defined("INDEX")) die("Not allowed.");
 
-require_once './conf.php';
-require_once './helpers.php';
-require_once './_classes/DatabaseConnection.php';
-require_once './_classes/MongoDBConnection.php';
-require_once './_classes/MySQLConnection.php';
-require_once './_classes/ContentsModel.php';
-require_once './_classes/ContentsModelMapper.php';
+$selfPath = dirname(__FILE__);
+
+require_once $selfPath.'/conf.php';
+require_once $selfPath.'/helpers.php';
+require_once $selfPath.'/_classes/DatabaseConnection.php';
+require_once $selfPath.'/_classes/MongoDBConnection.php';
+require_once $selfPath.'/_classes/MySQLConnection.php';
+require_once $selfPath.'/_classes/Model.php';
+require_once $selfPath.'/_classes/ContentsModel.php';
+require_once $selfPath.'/_classes/ContentsModelMapper.php';
 
 ?>
