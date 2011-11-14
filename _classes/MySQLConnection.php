@@ -191,7 +191,11 @@ class MySQLConnection extends DatabaseConnection{
       $stmt->execute();
       return $this->ProcessStatement($stmt);
    }
-   
+   /**
+    * Select specific columns from the table
+    * @param $col columns to be selected, @isLimited the rows returned are limited; false by default
+    * @return all rows from the $col
+    */
    public function SelectColumn($col, $isLimited = false){
       $queryString = " SELECT $col FROM {$this->table} ";
       if(isset($this->orderby, $this->order)) {
@@ -204,7 +208,11 @@ class MySQLConnection extends DatabaseConnection{
       $stmt->execute();
       return $this->ProcessStatement($stmt);
    }
-   
+   /**
+    * Runs a mySQL query
+    * @param $query the query string
+    * @return results
+    */
    public function RunQuery($query) {
       $ret = empty($query) ? false : $this->link->query($query);
       return $ret;
