@@ -50,7 +50,12 @@ class MongoDBConnection extends DatabaseConnection{
    public function SelectAll($isLimited = true){
       if(isset($this->limitx, $this->limity) && $isLimited){
       
+      } else {
+      
       }
+   }
+   public function insertData($data){
+      
    }
    public function Search($where, $varType, $var, $isStrict = false, $isLimited = false){
    
