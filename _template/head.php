@@ -9,8 +9,8 @@
    <meta name="keywords" content="<?php echo $indexKeyw; ?>" />
    <meta name="author" content="<?php echo SITE_AUTHOR; ?>" />
    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-   <link rel="stylesheet" type="text/css" href="style.css" />
-   <link rel="shortcut icon" href="favicon.ico" />
+   <link rel="stylesheet" type="text/css" href="<?php echo SITE_URL; ?>style.css" />
+   <link rel="shortcut icon" href="<?php echo SITE_URL; ?>favicon.ico" />
 </head>
 
 
@@ -19,7 +19,7 @@
    
    
       <div id="header">
-         <h1><a href="."><?php echo SITE_TITLE; ?></a></h1>
+         <h1>█ ♥ █ <a href="."><?php echo SITE_TITLE; ?></a></h1>
 
          <h2 id="quote"></h2><br />
          <hr />
