@@ -116,5 +116,28 @@ class Helper{
       $func($var);
       echo "</pre>\n";
    }
+   public static function randomStrings($length = 5){
+      $str = "";
+      $possible = "2346789bcdfghjkmnpqrtvwxyzBCDFGHJKLMNPQRTVWXYZ";
+
+      $maxlength = strlen($possible);
+     
+      if ($length > $maxlength) {
+        $length = $maxlength;
+      }
+    
+      $i = 0; 
+      while ($i < $length) { 
+        $char = substr($possible, mt_rand(0, $maxlength-1), 1); 
+        if (!strstr($str, $char)) { 
+          $str .= $char;
+          $i++;
+        }
+      }
+      return $str;
+   }
+   public static function isValidURL($url){
+      return preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $url);
+   }
 }
 ?>
