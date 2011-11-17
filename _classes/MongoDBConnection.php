@@ -47,6 +47,9 @@ class MongoDBConnection extends DatabaseConnection{
          die('Cannot select collection: ' . $e->getMessage());
       }
    }
+   public function setCollection($collection){
+      $this->setTable($collection);
+   }
    public function SelectAll($isLimited = true){
       if(isset($this->limitx, $this->limity) && $isLimited){
       
@@ -54,11 +57,23 @@ class MongoDBConnection extends DatabaseConnection{
       
       }
    }
-   public function insertData($data){
-      
+   public function insertData($data, $searchData){
+      $res = $this->searchData($searchData);
+      $resCount = $res->count();
+      if($resCount <= 0){
+         $this->collection->insert($data, true);
+      } else {
+         return $res;
+      }
+      return $this->searchData($searchData);
+   }
+   public function searchData($data){
+      return $this->collection->find($data);
    }
    public function Search($where, $varType, $var, $isStrict = false, $isLimited = false){
-   
+      $filter = array($var => $where);
+      $res = $this->collection->find($filter);
+      return $res;
    }
    public function GetNumRows(){
    
