@@ -19,7 +19,7 @@
    
    
       <div id="header">
-         <h1>█ ♥ █ <a href="."><?php echo SITE_TITLE; ?></a></h1>
+         <h1>█ ♥ █ <a href="<?php echo SITE_URL; ?>"><?php echo SITE_TITLE; ?></a></h1>
 
          <h2 id="quote"></h2><br />
          <hr />

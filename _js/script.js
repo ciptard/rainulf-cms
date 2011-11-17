@@ -55,7 +55,7 @@ $(document).ready(function(){
    // RUN ONCE functions
    // Get random quote from 'quotes.txt'
    $(window).load(function(){
-      $.get("quotes.txt", function(result){
+      $.get("http://rainulf.ca/quotes.txt", function(result){
          var quotes = result.split("\n");
          $("h2#quote").text(quotes[generateRandom(quotes.length)]);
       });
