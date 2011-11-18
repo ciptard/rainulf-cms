@@ -10,10 +10,18 @@ define("INDEX", true);
 require_once '../commonrequires.php';
 
 Helper::fixMagicQuotes();
-$indexTitle = 'URL Redirector - ' . SITE_TITLE;
-$indexDesc = 'Rainulf\'s personal URL redirector. You are free to use it as well! =)';
-$indexKeyw = 'rainulf pineda, rainulf, url redirect, url redirector, url, rainulf.ca';
-$jsOut = '';
+$indexTitle = 'URL Shortener - ' . SITE_TITLE;
+$indexDesc = 'Rainulf\'s personal URL Shortener. You are free to use it as well! =)';
+$indexKeyw = 'rainulf pineda, rainulf, url redirect, url redirector, url, rainulf.ca, url Shortener, Shortener';
+$jsOut = <<<END
+$(document).ready(function(){
+   document.getElementById('url').focus();
+   $("#shorturl, #url").click(function(){
+      $(this).select();
+   });
+});
+
+END;
 
 /**
  * Mapper creation and REQUEST grabbing
