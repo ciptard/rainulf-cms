@@ -23,7 +23,8 @@ else if(array_key_exists('id', $requests)){
    $indexPosts = $mapper->Fetch('id', intval($requests['id']), true);
 }
 else {
-   $indexPosts = $mapper->FetchAll(0, CONTENTS_PER_PG);
+   $perpg = array_key_exists('limit', $requests) ? $requests['limit'] : CONTENTS_PER_PG;
+   $indexPosts = $mapper->FetchAll(0, $perpg);
 }
 
 echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n";
