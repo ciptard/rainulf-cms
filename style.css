@@ -72,9 +72,13 @@ h3 {
 }
 #left ul li{
    list-style-type: circle;
+   margin-left: -30px; /* a hack!! */
 }
 #left ul#certs li{
    list-style-type: none;
+}
+ul,ol li{
+  margin-left: 60px;
 }
 #main {
 	margin					: 5px 5px 5px 260px;
